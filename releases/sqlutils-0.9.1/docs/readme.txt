@@ -1,1 +1,0 @@
-This packages contains a class which provides database connection pooling, as well as classes which can be used to dynamically generated SQL statements.
