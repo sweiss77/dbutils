@@ -1,4 +1,3 @@
-
 // $Id$
 
 package gov.nasa.hq.sql;
@@ -6,6 +5,8 @@ package gov.nasa.hq.sql;
 import java.sql.*;
 import java.lang.*;
 import java.util.*;
+
+import gov.nasa.hq.properties.*;
 
 /**
  * A singleton class which manages a pool of database connections.
@@ -15,24 +16,26 @@ import java.util.*;
 public class DBConnectionManager extends Thread {
 
     private static DBConnectionManager _connMgr;
-    String              _myName = null;
-    int                 _checkoutCount = 0;
-    String              _dbURL;
-    String              _driverName;
-    Properties          _props;
-    private Stack       _pool = new Stack();
-    private Stack       _oldpool = new Stack();
-    String              _username;
-    String              _password;
-    boolean             _mgrFinished;
-    boolean             _threadFinished;
+    String _myName = null;
+    int _checkoutCount = 0;
+    String _dbURL;
+    String _driverName;
+    Properties _props;
+    private Stack _pool = new Stack();
+    private Stack _oldpool = new Stack();
+    String _username;
+    String _password;
+    boolean _mgrFinished;
+    boolean _threadFinished;
+
+    // The following are default values which can be over-ridden
 
     /**
      *  Connection pool will be scanned every specified milliseconds.
      *  Can be altered using properties file passed to constructor. 
      *  Properties file should specify seconds, not milliseconds.
      */
-    long _sleepTime = 90 * 1000; // 90 seconds
+    long DEFAULT_SLEEP_TIME = 90 * 1000; // 90 seconds
 
     /**
      *  Minimum number of connections to keep in the connection pool.
@@ -40,64 +43,125 @@ public class DBConnectionManager extends Thread {
      *  pool simply maintains a ready-made set of connections to minimize 
      *  the delay of making one from scratch.
      */
-    int _minPoolSize = 6;
+    int DEFAULT_MIN_POOL_SIZE = 6;
 
     /** 
      *  Can be set using the property DBConn_expire_limit, which should be
      *  specified in seconds.  See DBConnection.expire_limit.
      */
-    long _expireLimit  = 60 * 60 * 1000;
+    long DEFAULT_EXPIRE_LIMIT = 60 * 60 * 1000;
 
     /** 
      *  Can be set using the property DBConn_idle_limit, which should be
      *  specified in seconds.  See DBConnection.idle_limit.
      */
-    long _idleLimit    = 10 * 60 * 1000;
+    long DEFAULT_IDLE_LIMIT = 10 * 60 * 1000;
 
+    long _sleepTime;
+    int _minPoolSize;
+    long _idleLimit;
+    long _expireLimit;
+    
     /**
-     * Constructor which takes as arguments a <code>LogManager</code>, and a
-     * <code>Properties</code> object which contains the information needed
+     * Constructor which takes as arguments a <code>Properties</code> object
+     * as its only constructor. This contains the information needed
      * to initialize the database connection. This information includes the
      * URL to the database, the username and password to use for connecting
      * to the database and the name of the JDBC driver
      * @param <code>lmgr</code> the application's <code>LogManager</code>
      * @param <code>p</code> the <code>Properties</object>
      */
-    public DBConnectionManager( Properties p ) throws Exception {
+    private DBConnectionManager() throws Exception {
 
         // Get stuff we need.
         _myName = this.getClass().getName();
         _mgrFinished = false;
-        _props = p;
-        _dbURL = _props.getProperty( "DB_URL" );
-        _username = _props.getProperty( "DB_USERNAME" ); // ???
-        _password = _props.getProperty( "DB_PASSWORD" ); // ???
-        setDriverName( _props.getProperty( "JDBC_DRIVER" ).trim() );
+
+        ApplicationProperties props = ApplicationProperties.getInstance();
 
         try {
+
+            PropertyGroup dbprops = props.getPropertyGroup( "system",
+                                                            "database" );
+            _dbURL = dbprops.getPropertyValue( "url" );
+            _username = dbprops.getPropertyValue( "username" );
+            _password = dbprops.getPropertyValue( "password" );
+            _driverName = dbprops.getPropertyValue( "jdbcDriver" );
             Class.forName( _driverName );
-        } catch( Exception ex ) {
-            //logMgr.syslog( "Error loading JDBC driver." );
-            throw ex;
+
+            //String temp = p.getProperty( name,
+                                         //String.valueOf( defaultval / 1000 ) );
+            //long result = Long.parseLong( temp ) * 1000;
+
+            try {
+                _sleepTime = dbprops.getPropertyValueInt( "threadSleepTime" );
+            } catch ( Exception ex ) {
+                _sleepTime = DEFAULT_SLEEP_TIME;
+            }
+
+            //_sleepTime = getMillisecondsProperty( "DBCONNMANAGER_SLEEP_TIME",
+                                                  //dbprops,
+                                                  //_sleepTime );
+
+            //_minPoolSize = Integer.parseInt( p.getProperty( "DBCONNMANAGER_MIN_POOL_SIZE",
+                                                            //String.valueOf( _minPoolSize ) ) );
+            try {
+                _minPoolSize = dbprops.getPropertyValueInt( "minPoolSize" );
+            } catch ( Exception ex ) {
+                _minPoolSize = DEFAULT_MIN_POOL_SIZE;
+            }
+
+            //_idleLimit = this.getMillisecondsProperty( "DBCONN_IDLE_LIMIT",
+                                                       //dbprops,
+                                                       //_idleLimit );
+            try {
+                _idleLimit = dbprops.getPropertyValueInt( "connectionIdleLimit" );
+            } catch ( Exception ex ) {
+                _idleLimit = DEFAULT_IDLE_LIMIT;
+            }
+
+            //_expireLimit = this.getMillisecondsProperty( "DBCONN_EXPIRE_LIMIT",
+                                                         //dbprops,
+                                                         //_expireLimit );
+            try {
+                _expireLimit = dbprops.getPropertyValueInt( "connectionExpireLimit" );
+            } catch ( Exception ex ) {
+                _expireLimit = DEFAULT_EXPIRE_LIMIT;
+            }
+
+        } catch ( PropertiesException ex ) {
         }
 
-        //Read properties:
-        _sleepTime =
-            getMillisecondsProperty("DBCONNMANAGER_SLEEP_TIME", p, _sleepTime);
-
-        _minPoolSize=
-            Integer.parseInt(p.getProperty("DBCONNMANAGER_MIN_POOL_SIZE",
-                                           String.valueOf(_minPoolSize)));
-
-        _idleLimit =
-            this.getMillisecondsProperty("DBCONN_IDLE_LIMIT", p, _idleLimit);
-
-        _expireLimit =
-            this.getMillisecondsProperty("DBCONN_EXPIRE_LIMIT", p,
-                                         _expireLimit);
+        //        long idle_limit = getMillisecondsProperty( "DBCONN_IDLE_LIMIT",
+        //                                                   _props,
+        //                                                   10000 );
+        //
+        //        long expire_limit = getMillisecondsProperty( "DBCONN_EXPIRE_LIMIT",
+        //                                                     _props,
+        //                                                     10000 );
 
         // Make my manager thread happen.
         this.start();
+    }
+
+    /**
+     * Returns a static instance of the DBConnectionManager
+     * @param <code>lmgr</code> the application <code>LogManager</code>
+     * @param <code>props</code> a <code>Properties</code> object containing
+     *        configuration information
+     * @return <code>DBConnectionManager</code>
+     * @throws <code>Exception</code> if an initialization error occors
+     */
+    public static DBConnectionManager getInstance() {
+
+        if ( _connMgr == null ) {
+            try {
+            _connMgr = new DBConnectionManager();
+            } catch ( Exception ex ) {
+                //
+            }
+        }
+        return _connMgr;
     }
 
     /**
@@ -106,6 +170,7 @@ public class DBConnectionManager extends Thread {
      *        of the driver
      */
     void setDriverName( String drivername ) {
+
         _driverName = drivername;
     }
 
@@ -114,25 +179,29 @@ public class DBConnectionManager extends Thread {
      * @return <code>String</code>
      */
     public String getDriverName() {
+
         return _driverName;
     }
 
-    protected long getMillisecondsProperty( String name, Properties p,
-                                            long defaultval ) {
-        String temp=p.getProperty(name,String.valueOf(defaultval/1000));
-        long result=Long.parseLong(temp)*1000;
-        return result;
-    }
+    //    protected long getMillisecondsProperty( String name, PropertyGroup pg,
+    //                                            long defaultval ) {
+    //
+    //        String temp = pg.getPropertyValue( name, String.valueOf( defaultval / 1000 ) );
+    //        long result = Long.parseLong( temp ) * 1000;
+    //        return result;
+    //    }
 
     protected String poolStatus() {
-        return "\n  connection count: in pool=" + 
-            _pool.size()+" checked out="+_checkoutCount;
+
+        return "\n  connection count: in pool=" + _pool.size()
+            + " checked out=" + _checkoutCount;
     }
 
     public Thread getThread() {
+
         return Thread.currentThread();
     }
-  
+
     /**
      * Monitors the pool of <code>DBConnection</code> objects.
      * Checks for expired
@@ -145,29 +214,29 @@ public class DBConnectionManager extends Thread {
         _threadFinished = false;
 
         //while(true) {
-        while( !_mgrFinished ) {
+        while ( !_mgrFinished ) {
 
             // Put connections in temp pool, and be quick about it:
-            synchronized(_pool) {
-                while(!_pool.empty())
-                    _oldpool.push(_pool.pop());
+            synchronized ( _pool ) {
+                while ( !_pool.empty() )
+                    _oldpool.push( _pool.pop() );
             }
-      
+
             // Now in a relaxed manner, scan the connections for expiration,
             // and put them back if they're good:
             while ( !_oldpool.empty() ) {
 
-                DBConnection c = (DBConnection)_oldpool.pop();
+                DBConnection c = (DBConnection) _oldpool.pop();
 
                 if ( c.expired() ) {
                     //debug( ID + "Database connection has expired: "+ c );
                     c.close();
-                    c=null;	  
+                    c = null;
                 } else {
-                    _pool.push(c);
+                    _pool.push( c );
                 }
             }
-      
+
             // Add any missing connections to pool
             while ( _pool.size() < _minPoolSize ) {
                 _pool.push( createDBConnection() );
@@ -180,9 +249,9 @@ public class DBConnectionManager extends Thread {
             // Go to sleep for a while.
             try {
                 //debug( ID + "DBConnectionManager going to sleep", 5 );
-                this.sleep(_sleepTime);
+                this.sleep( _sleepTime );
                 //debug( "DBConnectionManager waking up", 5 );
-            } catch(InterruptedException e) {
+            } catch ( InterruptedException e ) {
                 //debug( "DBConnectionManager got woken up", 5 );
                 ; // Someone woke me up!  Guess we better go to work.
             }
@@ -193,17 +262,19 @@ public class DBConnectionManager extends Thread {
         debug( ID + "Stopped" );
 
     } // END run()
-  
+
     public void force_checkpoint() {
+
         this.interrupt();
         //syslog( "Checkpoint Forced", 7 );
     }
-  
+
     /**
      * Gets a DBConnection object from the connection pool
      * @return <code>DBConnection</code>
      */
     public DBConnection checkOut() {
+
         return checkout();
     }
 
@@ -213,27 +284,36 @@ public class DBConnectionManager extends Thread {
      */
     public DBConnection checkout() {
 
-        String ID = "checkout() ";
-        DBConnection returnval=null;
-        String dbg="";
+        return getConnection();
+    }
 
-        synchronized (_pool) {
+    /**
+     * Gets a DBConnection object from the connection pool
+     * @return <code>DBConnection</code>
+     */
+    public DBConnection getConnection() {
 
-            if (!_pool.empty()) {
-                dbg+=" obtained from pool; ";
-                returnval=(DBConnection)_pool.pop();
+        String ID = "getConnection() ";
+        DBConnection returnval = null;
+        String dbg = "";
+
+        synchronized ( _pool ) {
+
+            if ( !_pool.empty() ) {
+                dbg += " obtained from pool; ";
+                returnval = (DBConnection) _pool.pop();
             }
         }
 
-        if (returnval==null) {
-            dbg+=" created; ";
-            returnval=createDBConnection();
+        if ( returnval == null ) {
+            dbg += " created; ";
+            returnval = createDBConnection();
         }
 
         _checkoutCount++;
 
-        if (_checkoutCount>150)
-            dbg+=" WARNING!!!! ";
+        if ( _checkoutCount > 150 )
+            dbg += " WARNING!!!! ";
         //syslog("checkout():\n  " + returnval + dbg + poolStatus(), 8 );
 
         //debug( ID + "Pool size: " + _pool.size() );
@@ -245,6 +325,7 @@ public class DBConnectionManager extends Thread {
      * @param <code>conn</code>
      */
     public void checkIn( DBConnection conn ) {
+
         checkin( conn );
     }
 
@@ -254,8 +335,13 @@ public class DBConnectionManager extends Thread {
      */
     public void checkin( DBConnection conn ) {
 
-        String ID = "checkIn() ";
-        String dbg= "" + conn;
+        releaseConnection( conn );
+    }
+
+    public void releaseConnection( DBConnection conn ) {
+
+        String ID = "releaseConnection() ";
+        String dbg = "" + conn;
 
         if ( conn.expired() ) {
             conn.close();
@@ -274,11 +360,11 @@ public class DBConnectionManager extends Thread {
         //               poolStatus(), debugLevel);
     }
 
-
     /**
      * Stops the connection manager by calling its {@link destroy()} method
      */
     public void stopManager() {
+
         String ID = "stopManager() ";
         boolean done = false;
         // Close all db connections
@@ -296,8 +382,9 @@ public class DBConnectionManager extends Thread {
 
     /** Closes all connections in the pool */
     public void closeall() {
+
         while ( !_pool.empty() ) {
-            DBConnection conn=(DBConnection)_pool.pop();
+            DBConnection conn = (DBConnection) _pool.pop();
             conn.close();
         }
     }
@@ -307,13 +394,14 @@ public class DBConnectionManager extends Thread {
      * threads to finish
      */
     protected void finalize() throws Throwable {
+
         String ID = "finalize() ";
         _mgrFinished = true;
 
-        while( !_threadFinished ) {
+        while ( !_threadFinished ) {
             try {
                 this.join();
-            } catch( InterruptedException i ) {
+            } catch ( InterruptedException i ) {
             }
         }
         this.closeall();
@@ -326,13 +414,18 @@ public class DBConnectionManager extends Thread {
      */
     private DBConnection createDBConnection() {
 
-        long idle_limit=
-            getMillisecondsProperty("DBCONN_IDLE_LIMIT", _props, 10000);
+//        long idle_limit = getMillisecondsProperty( "DBCONN_IDLE_LIMIT",
+//                                                   _props,
+//                                                   10000 );
+//
+//        long expire_limit = getMillisecondsProperty( "DBCONN_EXPIRE_LIMIT",
+//                                                     _props,
+//                                                     10000 );
 
-        long expire_limit=
-            getMillisecondsProperty("DBCONN_EXPIRE_LIMIT", _props, 10000);
-
-        return this.createDBConnection(_dbURL,_props,idle_limit,expire_limit);
+        return createDBConnection( _dbURL,
+                                        _props,
+                                        _idleLimit,
+                                        _expireLimit );
     }
 
     /**
@@ -347,28 +440,27 @@ public class DBConnectionManager extends Thread {
      */
     protected DBConnection createDBConnection( String url, Properties config,
                                                long idle_limit,
-                                               long expireLimit) {  
-        return new DBConnection(_dbURL, _props,idle_limit, expireLimit);
+                                               long expireLimit ) {
+
+        return new DBConnection( _dbURL, _props, idle_limit, expireLimit );
     }
 
-    /**
-     * Returns a static instance of the DBConnectionManager
-     * @param <code>lmgr</code> the application <code>LogManager</code>
-     * @param <code>props</code> a <code>Properties</code> object containing
-     *        configuration information
-     * @return <code>DBConnectionManager</code>
-     * @throws <code>Exception</code> if an initialization error occors
-     */
-    public static DBConnectionManager getDBConnectionManager( Properties props )
-        throws Exception {
+    //    public static DBConnectionManager getDBConnectionManager( Properties props )
+    //        throws Exception {
+    //
+    //        return getInstance( props );
+    //    }
 
-        if( _connMgr == null ) {
-            _connMgr = new DBConnectionManager( props );
-        }
-        return _connMgr;
-    }
-
+    //    public static DBConnectionManager getInstance( Properties props ) {
+    //
+    //        if ( _connMgr == null ) {
+    //            _connMgr = new DBConnectionManager( props );
+    //        }
+    //        return _connMgr;
+    //    }
+    //
     private void debug( String message ) {
+
         System.out.println( _myName + ": " + message );
     }
 }

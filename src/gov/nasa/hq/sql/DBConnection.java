@@ -38,9 +38,9 @@ public class DBConnection {
 
     /**
      *  Create an open connection to specified database.
-     */  
+     */
     public DBConnection( String url, Properties config, long idleLimit,
-                         //long expireLimit, LogManager logmgr ) {
+    //long expireLimit, LogManager logmgr ) {
                          long expireLimit ) {
 
         String username = config.getProperty( "DB_USERNAME" );
@@ -48,31 +48,38 @@ public class DBConnection {
 
         try {
 
-            _conn = java.sql.DriverManager.getConnection( url, username,
+            _conn = java.sql.DriverManager.getConnection( url,
+                                                          username,
                                                           password );
 
             _idleLimit = idleLimit;
-            _expireLimit = expireLimit;      
+            _expireLimit = expireLimit;
             refreshIdleTimeout();
 
             if ( expireLimit > 0 )
                 _expireTimeout = System.currentTimeMillis() + expireLimit;
-      
-        } catch(Exception e) {
+
+        } catch ( Exception e ) {
             //syslog( "Error create DBConnection: " + e.getMessage() );
             e.printStackTrace();
-        }    
+        }
 
     } // END DBConnection()
-  
+
+    public Connection getConnection() {
+        return _conn;
+    }
+
     /**
      *  Checks to see if this connection has expired
      *  @return <code>true</code> if the connection has expired.
      */
     protected boolean expired() {
+
         long currtime = System.currentTimeMillis();
-        return  (_expireTimeout > 0 && currtime >= _expireTimeout) || 
-            (_idleTimeout > 0 && currtime >= _idleTimeout  ) || (_tainted);
+        return ( _expireTimeout > 0 && currtime >= _expireTimeout )
+            || ( _idleTimeout > 0 && currtime >= _idleTimeout )
+            || ( _tainted );
     }
 
     /**
@@ -80,11 +87,13 @@ public class DBConnection {
      *  some SQL to free stuff up on the DB end.
      */
     protected void refreshIdleTimeout() {
+
         _idleTimeout = System.currentTimeMillis() + _idleLimit;
     }
 
     /**  Call to signify that this connection has had an exception. */
     public void taint() {
+
         //syslog( "Tainted Connection" );
         _tainted = true;
     }
@@ -95,7 +104,21 @@ public class DBConnection {
      * @return <code>boolean</code>
      */
     protected boolean tainted() {
+
         return _tainted;
+    }
+
+    public Statement createStatement() {
+
+        Statement s = null;
+        if ( _conn != null ) {
+            try {
+                s = _conn.createStatement();
+            } catch ( SQLException ex ) {
+                //
+            }
+        }
+        return s;
     }
 
     /** 
@@ -105,25 +128,28 @@ public class DBConnection {
      *  @param sql the SQL statement
      *  @return a PreparedStatement that has to have its '?' elements bound
      */
-    public PreparedStatement prepareStatement(String sql) {
+    public PreparedStatement prepareStatement( String sql ) {
+
         try {
-            return _conn.prepareStatement(sql);
-        } catch(Exception e) {
+            return _conn.prepareStatement( sql );
+        } catch ( Exception e ) {
             //syslog( "DBConnection.prepareStatement: "+e );
             taint();
             return null;
         }
     }
-  
+
     public DatabaseMetaData getMetaData() throws SQLException {
+
         return _conn.getMetaData();
     }
 
     public ResultSet doSelect( SQLQuery query ) throws SQLException {
+
         String sql = query.getSQL();
         return doSelect( sql );
     }
-  
+
     /** 
      * Perform SQL statement and return ResultSet. Calls its
      * DBConnectionManager's syslog() method if the query fails, and prints
@@ -133,17 +159,17 @@ public class DBConnection {
      * @param <code>sql</code> the SQL statement
      * @return <code>ResultSet</code>, or null if the sql caused an exception.   
      */
-    public ResultSet doSelect(String sql) throws SQLException {
+    public ResultSet doSelect( String sql ) throws SQLException {
 
         try {
             Statement stmt = _conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery( sql );
             return rs;
-        } catch(SQLException e) {
+        } catch ( SQLException e ) {
             //syslog( "Database error, " + e.getMessage() );
             taint();
             throw e;
-        } catch(java.lang.OutOfMemoryError oom ) {
+        } catch ( java.lang.OutOfMemoryError oom ) {
             throw new SQLException( oom.toString() );
         }
     }
@@ -154,6 +180,7 @@ public class DBConnection {
      * @return <code>int</code> The number of records updated
      */
     public int doUpdate( String sql ) throws SQLException {
+
         int count = 0;
         try {
             Statement stmt = _conn.createStatement();
@@ -167,34 +194,36 @@ public class DBConnection {
         return count;
     }
 
-    public void setReadOnly(boolean b){
-        try{
-            _conn.setReadOnly(b);
-        } catch (SQLException e){
+    public void setReadOnly( boolean b ) {
+
+        try {
+            _conn.setReadOnly( b );
+        } catch ( SQLException e ) {
             //syslog( "Database error: " + e.getMessage() );
             e.printStackTrace();
         }
     }
 
-    public boolean doQuery(String sql) throws SQLException {
+    public boolean doQuery( String sql ) throws SQLException {
+
         try {
             Statement stmt = _conn.createStatement();
-            return stmt.execute(sql);
-        } catch(SQLException e) { 
+            return stmt.execute( sql );
+        } catch ( SQLException e ) {
             taint();
             throw e;
         }
     }
 
     public void close() {
+
         try {
-            if ( _conn != null ) _conn.close();
-        } catch(Exception e) {
+            if ( _conn != null )
+                _conn.close();
+        } catch ( Exception e ) {
             // Fine - the garbage collector can do it then!
             ;
         }
     }
-  
+
 }
-
-
