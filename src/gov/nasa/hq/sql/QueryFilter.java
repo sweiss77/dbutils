@@ -1,4 +1,3 @@
-
 // $Id$
 
 package gov.nasa.hq.sql;
@@ -13,16 +12,18 @@ import java.util.ArrayList;
 public class QueryFilter implements java.io.Serializable {
 
     String colname = null;
-    String value   = null;
-    int    comparator;
+    String value = null;
+    int comparator;
     ArrayList clauses = null;
     boolean caseSensitive = true;
     String _keyword = null;
+    boolean identity_ = false;
 
     protected ArrayList items = null;
 
     /** Default, empty constructor */
     protected QueryFilter() {
+
         clauses = new ArrayList();
         items = new ArrayList();
         caseSensitive = true;
@@ -34,25 +35,30 @@ public class QueryFilter implements java.io.Serializable {
      * @param <code>keyword</code> a <code>String</code> holding the SQL keyword
      */
     protected QueryFilter( String keyword ) {
+
         this();
         _keyword = keyword;
     }
 
     protected void setKeyword( String keyword ) {
+
         _keyword = keyword.toUpperCase();
     }
 
     protected void setItems( ArrayList list ) {
+
         for ( int i = 0; i < list.size(); i++ ) {
             items.add( list.get( i ) );
         }
     }
 
     public void setCaseSensitive( boolean flag ) {
+
         caseSensitive = flag;
     }
 
     public boolean getCaseSensitive() {
+
         return caseSensitive;
     }
 
@@ -61,6 +67,7 @@ public class QueryFilter implements java.io.Serializable {
      * @return <code>String</code>
      */
     public String getColumnName() {
+
         return colname;
     }
 
@@ -69,6 +76,7 @@ public class QueryFilter implements java.io.Serializable {
      * @return <code>String</code>
      */
     public String getValue() {
+
         return value;
     }
 
@@ -79,6 +87,7 @@ public class QueryFilter implements java.io.Serializable {
      * @return <code>int</code>
      */
     public int getComparator() {
+
         return comparator;
     }
 
@@ -89,6 +98,7 @@ public class QueryFilter implements java.io.Serializable {
      *        <code>QueryFilter</code>
      */
     public void addFilter( QueryFilter filter ) {
+
         clauses.add( filter );
     }
 
@@ -100,10 +110,12 @@ public class QueryFilter implements java.io.Serializable {
      *        <code>QueryFilter</code>
      */
     public void appendClause( QueryFilter clause ) {
+
         addFilter( clause );
     }
 
     public void addClause( QueryFilter clause ) {
+
         appendClause( clause );
     }
 
@@ -126,10 +138,10 @@ public class QueryFilter implements java.io.Serializable {
         Class c = val.getClass();
         String s = c.getName();
 
-        if ( s.equals( "java.lang.String" ) ||
-             s.equals( "java.lang.StringBuffer" ) ) {
+        if ( s.equals( "java.lang.String" )
+            || s.equals( "java.lang.StringBuffer" ) ) {
 
-            if ( !caseSensitive && (comp != SQL.EQUALS_COL) ) {
+            if ( !caseSensitive && ( comp != SQL.EQUALS_COL ) ) {
                 colname = "UPPER(" + fieldname + ")";
             }
 
@@ -138,13 +150,15 @@ public class QueryFilter implements java.io.Serializable {
                 value = val.toString();
             } else {
                 buf.append( "'" );
-                if ( comp == SQL.LIKE || comp == SQL.ENDS ) buf.append( '%' );
+                if ( comp == SQL.LIKE || comp == SQL.ENDS )
+                    buf.append( '%' );
                 if ( !caseSensitive ) {
                     buf.append( val.toString().toUpperCase() );
                 } else {
                     buf.append( val.toString() );
                 }
-                if ( comp == SQL.LIKE || comp == SQL.BEGINS ) buf.append( '%' );
+                if ( comp == SQL.LIKE || comp == SQL.BEGINS )
+                    buf.append( '%' );
                 buf.append( "'" );
                 value = new String( buf );
             }
@@ -160,6 +174,7 @@ public class QueryFilter implements java.io.Serializable {
      * @return <code>int</code>
      */
     public int numClauses() {
+
         return clauses.size();
     }
 
@@ -169,6 +184,7 @@ public class QueryFilter implements java.io.Serializable {
      * @return <code>String</code>
      */
     public String toString() {
+
         return getContent();
     }
 
@@ -181,60 +197,79 @@ public class QueryFilter implements java.io.Serializable {
             workbuf.append( ' ' );
         }
 
-        if ( clauses.size() > 0 ) workbuf.append( " (" );
+        if ( clauses.size() > 0 )
+            workbuf.append( " (" );
 
-        workbuf.append( colname );
+        if ( identity_ ) {
 
-        switch( comparator ) {
+            workbuf.append( "1 = 1" );
 
-            case SQL.EQ:
-                workbuf.append( " = " + value );
-                break;
+        } else {
 
-            case SQL.LIKE:
-                workbuf.append( " LIKE " + value );
-                break;
+            workbuf.append( colname );
 
-            case SQL.NE:
-                workbuf.append( " != " + value );
-                break;
+            switch ( comparator ) {
 
-            case SQL.GT:
-                workbuf.append( " > " + value );
-                break;
+                case SQL.EQ:
+                    workbuf.append( " = " + value );
+                    break;
 
-            case SQL.LT:
-                workbuf.append( " < " + value );
-                break;
+                case SQL.LIKE:
+                    workbuf.append( " LIKE " + value );
+                    break;
 
-            case SQL.BEGINS:
-                workbuf.append( " LIKE " + value );
-                break;
+                case SQL.NE:
+                    workbuf.append( " != " + value );
+                    break;
 
-            case SQL.ENDS:
-                workbuf.append( " LIKE " + value );
-                break;
+                case SQL.GT:
+                    workbuf.append( " > " + value );
+                    break;
 
-            case SQL.IN:
-                workbuf.append( " IN " + value.toString() );
-                break;
+                case SQL.LT:
+                    workbuf.append( " < " + value );
+                    break;
 
-            case SQL.EQUALS_COL:
-                workbuf.append( " = " + value.toString() );
-                break;
+                case SQL.BEGINS:
+                    workbuf.append( " LIKE " + value );
+                    break;
+
+                case SQL.ENDS:
+                    workbuf.append( " LIKE " + value );
+                    break;
+
+                case SQL.IN:
+                    workbuf.append( " IN " + value.toString() );
+                    break;
+
+                case SQL.EQUALS_COL:
+                    workbuf.append( " = " + value.toString() );
+                    break;
+            }
+
         }
 
         for ( int i = 0; i < clauses.size(); i++ ) {
 
             workbuf.append( ' ' );
-            QueryFilter qf = (QueryFilter)clauses.get( i );
+            QueryFilter qf = (QueryFilter) clauses.get( i );
             workbuf.append( qf.getContent() );
             //if ( i < clauses.size() - 1 ) workbuf.append( ' ' );
         }
 
-        if ( clauses.size() > 0 ) workbuf.append( ")" );
+        if ( clauses.size() > 0 )
+            workbuf.append( ")" );
 
         return new String( workbuf );
     }
 
+    public void setIdentity( boolean identity ) {
+
+        identity_ = identity;
+    }
+
+    public boolean getIdentity() {
+
+        return identity_;
+    }
 }
