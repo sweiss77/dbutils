@@ -226,8 +226,16 @@ public class QueryFilter implements java.io.Serializable {
                     workbuf.append( " > " + value );
                     break;
 
+                case SQL.GTE:
+                    workbuf.append( " >= " + value );
+                    break;
+
                 case SQL.LT:
                     workbuf.append( " < " + value );
+                    break;
+
+                case SQL.LTE:
+                    workbuf.append( " <= " + value );
                     break;
 
                 case SQL.BEGINS:

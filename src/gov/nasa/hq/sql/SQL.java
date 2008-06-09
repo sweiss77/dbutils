@@ -24,10 +24,12 @@ public abstract class SQL implements java.io.Serializable {
     public static final int NOT_EQUAL = 2;
     /** Symbolic constant which indicates SQL "<" */
     public static final int LT = 3;
+    public static final int LTE = 9;
     /** Symbolic constant which indicates SQL "<" */
     public static final int LESS_THAN = 3;
     /** Symbolic constant which indicates SQL ">" */
     public static final int GT = 4;
+    public static final int GTE = 10;
     /** Symbolic constant which indicates SQL ">" */
     public static final int GREATER_THAN = 4;
     /** Symbolic constant which indicates SQL "LIKE 'xxx%'" */
