@@ -9,7 +9,7 @@ package gov.nasa.hq.sql;
 public class GroupByClause extends SQL {
 
     public GroupByClause() {
-        super( "ORDER BY" );
+        super( "GROUP BY" );
     }
 
     public GroupByClause( String s ) {
