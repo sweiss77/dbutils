@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: properties_sample.xml 295 2007-04-12 16:23:54Z sweiss $ -->
+<!--
+  This is a sample properties file, you can copy this file to a new name
+  and customize it according to your application's requirements. You must
+  name your new file according to the following convention:
+  
+  properties_[property-set-name].xml
+  
+  where "property-set-name" is the name you want to give to the set of
+  properties contained in the file, and is the same as the "name" attribute
+  of the propertySet element (which is the root element in this file). So
+  for example, if you have a set of properties that you want to call "foo",
+  the file would be called "properties_foo.xml". And the root element would
+  be:
+  
+  <propertySet name="foo" ... />
+  
+  The label and description attributes are for display purposes only and can
+  be whatever you want them to be.
+  
+  Your properties files should be located in a directory called "properties"
+  directly under the WEB-INF directory. So the full path to a properties file
+  might be something like:
+  
+  /usr/local/tomcat/webapps/myapp/WEB-INF/properties/properties_system.xml
+  
+  You can add as many "propertyGroup" elements as desired inside the "propertySet"
+  element. You can also add as many "property" elements as desired inside each
+  "propertyGroup" element.
+-->
+
+<propertySet name="system" label="Database Properties"
+  description="Database Configuration Properties"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="propertySet.xsd">
+
+  <propertyGroup name="database" label="Database Configuration Properties"
+    description="These are the configuration properties used by the DBConnectionManager class">
+
+    <property name="url" label="Database URL" type="text" size="35"
+      maxLength="70">
+      jdbc:mysql://127.0.0.1/portal-2_4
+    </property>
+
+    <property name="jdbcDriver" label="JDBC Driver Name" type="text"
+      size="50" maxLength="75">
+      org.gjt.mm.mysql.Driver
+    </property>
+
+    <property name="username" label="Database User" type="text"
+      size="50" maxLength="75">
+      portal
+    </property>
+
+    <property name="password" label="Database Password" type="password"
+      size="50" maxLength="75">
+      portal
+    </property>
+    
+  </propertyGroup>
+
+</propertySet>
