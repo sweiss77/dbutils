@@ -35,17 +35,15 @@ public class AndClause extends QueryFilter implements java.io.Serializable {
      */
     public AndClause( String fieldname, Object value,
             int comparator, DBStrategy dbstrategy ) {
-        this();
+        this(dbstrategy);
         setFilter( fieldname, value, comparator );
-        setDbStrategy( dbstrategy );
     }
     
     public AndClause( String fieldname, Object value,
             int comparator, DBStrategy dbstrategy, boolean flag ) {
-        this();
-        setFilter( fieldname, value, comparator );
-        setDbStrategy( dbstrategy );
+        this(dbstrategy);
         setCaseSensitive( flag );
+        setFilter( fieldname, value, comparator );
     }
 
     public AndClause( DBStrategy dbstrategy ) {

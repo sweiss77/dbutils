@@ -18,7 +18,7 @@ public class QueryFilter implements java.io.Serializable {
     boolean caseSensitive = true;
     String _keyword = null;
     boolean identity_ = false;
-    DBStrategy dbstrategy = new OracleStrategy();  //defult case  
+    DBStrategy dbstrategy = null;
 
     protected ArrayList items = null;
 
@@ -292,8 +292,8 @@ public class QueryFilter implements java.io.Serializable {
      * Defines the DBStrategy for the filter
      * @param <code>dbStrategy</code> the DBStrategy passed in from the client
      */
-    public void setDbStrategy( DBStrategy _dbstrategy ) {
-       dbstrategy = _dbstrategy;
+    public void setDbStrategy( DBStrategy dbstrategy ) {
+       this.dbstrategy = dbstrategy;
     }
     
  
