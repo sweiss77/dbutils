@@ -39,12 +39,14 @@ public class DBConnection {
     /**
      *  Create an open connection to specified database.
      */
-    public DBConnection( String url, Properties config, long idleLimit,
+
+    public DBConnection( String url, String _username,
+    		   			 String _password, long idleLimit,
     //long expireLimit, LogManager logmgr ) {
                          long expireLimit ) {
-
-        String username = config.getProperty( "DB_USERNAME" );
-        String password = config.getProperty( "DB_PASSWORD" );
+    	
+        String username = _username;
+        String password = _password;
 
         try {
 

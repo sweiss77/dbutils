@@ -78,16 +78,23 @@ public class DBConnectionManager extends Thread {
         _mgrFinished = false;
 
         ApplicationProperties props = ApplicationProperties.getInstance();
-
+        
         try {
 
             PropertyGroup dbprops = props.getPropertyGroup( "system",
                                                             "database" );
+            
             _dbURL = dbprops.getPropertyValue( "url" );
             _username = dbprops.getPropertyValue( "username" );
             _password = dbprops.getPropertyValue( "password" );
             _driverName = dbprops.getPropertyValue( "jdbcDriver" );
             Class.forName( _driverName );
+
+            // begin add to properties attribute
+            _props = new Properties( );
+            _props.setProperty( "DB_USERNAME", _username );
+            _props.setProperty( "DB_PASSWORD", _password );
+            // end add to properties attribute
 
             //String temp = p.getProperty( name,
                                          //String.valueOf( defaultval / 1000 ) );
@@ -130,6 +137,7 @@ public class DBConnectionManager extends Thread {
             }
 
         } catch ( PropertiesException ex ) {
+        	ex.printStackTrace( );
         }
 
         //        long idle_limit = getMillisecondsProperty( "DBCONN_IDLE_LIMIT",
@@ -155,10 +163,10 @@ public class DBConnectionManager extends Thread {
     public static DBConnectionManager getInstance() {
 
         if ( _connMgr == null ) {
-            try {
+        	try {
             _connMgr = new DBConnectionManager();
             } catch ( Exception ex ) {
-                //
+                ex.printStackTrace( );
             }
         }
         return _connMgr;
@@ -422,10 +430,11 @@ public class DBConnectionManager extends Thread {
 //                                                     _props,
 //                                                     10000 );
 
-        return createDBConnection( _dbURL,
-                                        _props,
-                                        _idleLimit,
-                                        _expireLimit );
+    	  return createDBConnection( _dbURL,
+        						   _username,
+        						   _password,
+                                   _idleLimit,
+                                   _expireLimit );
     }
 
     /**
@@ -438,11 +447,13 @@ public class DBConnectionManager extends Thread {
      * @param <code>expireLimit</code> maximum time-to-live for the connnection
      * @return <code>DBConnection</code> the new connection
      */
-    protected DBConnection createDBConnection( String url, Properties config,
+    protected DBConnection createDBConnection( String url, 
+    		                                   String username,
+			   								   String password,
                                                long idle_limit,
                                                long expireLimit ) {
 
-        return new DBConnection( _dbURL, _props, idle_limit, expireLimit );
+        return new DBConnection( _dbURL, username, password, idle_limit, expireLimit );
     }
 
     //    public static DBConnectionManager getDBConnectionManager( Properties props )
