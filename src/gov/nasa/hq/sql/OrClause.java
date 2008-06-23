@@ -14,6 +14,29 @@ public class OrClause extends QueryFilter {
         super( "OR" );
     }
 
+    /** Adding constructors to pass in a DBStrategy object (Strategy pattern)
+     * Concrete strategies such as OracleStrategy and MySqlStrategy should implement 
+     * the methods of the DBStrategy interface.
+     * @param <code>dbStrtaegy</code> the DBStrategy passed in from the client
+     */    
+    public OrClause( DBStrategy dbstrategy ) {
+        this();
+        setDbStrategy( dbstrategy );
+    }
+
+    public OrClause( String fieldname, Object value,
+            int comparator, DBStrategy dbstrategy ) {
+        this(dbstrategy);
+        setFilter( fieldname, value, comparator );
+    }
+    
+    public OrClause( String fieldname, Object value,
+            int comparator, DBStrategy dbstrategy, boolean flag ) {
+        this(dbstrategy);
+        setCaseSensitive( flag );
+        setFilter( fieldname, value, comparator );
+    }
+    
     public OrClause( String fieldname, Object value, int comparator ) {
 
         this();
