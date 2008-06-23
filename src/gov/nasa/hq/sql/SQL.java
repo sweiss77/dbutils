@@ -47,7 +47,14 @@ public abstract class SQL implements java.io.Serializable {
      *  "<code>EQUALS_COL</code>"
      */
     public static final int JOIN       = 8;
-
+    
+    /** Symbolic constant which indicates to use regular expression for word boundaries.
+     * Note: this is implemented differently in different database products so we have
+     * chosen to code for this using the Strategy pattern (see DBStrategy implementations).
+     * "<code>REGEXP</code>"
+     */
+    public static final int REGEXP = 11;
+    
     /** @deprecated */
     public static final String SELECT = "SELECT";
     /** @deprecated */

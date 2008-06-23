@@ -27,6 +27,32 @@ public class AndClause extends QueryFilter implements java.io.Serializable {
         setCaseSensitive( flag );
         setFilter( fieldname, value, comparator );
     }
+    
+    /** Adding constructors to pass in a DBStrategy object (Strategy pattern)
+     * Concrete strategies such as OracleStrategy and MySqlStrategy should implement 
+     * the methods of the DBStrategy interface.
+     * @param <code>dbStrtaegy</code> the DBStrategy passed in from the client
+     */
+    public AndClause( String fieldname, Object value,
+            int comparator, DBStrategy dbstrategy ) {
+        this();
+        setFilter( fieldname, value, comparator );
+        setDbStrategy( dbstrategy );
+    }
+    
+    public AndClause( String fieldname, Object value,
+            int comparator, DBStrategy dbstrategy, boolean flag ) {
+        this();
+        setFilter( fieldname, value, comparator );
+        setDbStrategy( dbstrategy );
+        setCaseSensitive( flag );
+    }
+
+    public AndClause( DBStrategy dbstrategy ) {
+        this();
+        setDbStrategy( dbstrategy );
+    }
+
 
     public AndClause( String fieldname, Object value, int comparator ) {
 

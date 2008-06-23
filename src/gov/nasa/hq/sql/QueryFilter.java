@@ -18,6 +18,7 @@ public class QueryFilter implements java.io.Serializable {
     boolean caseSensitive = true;
     String _keyword = null;
     boolean identity_ = false;
+    DBStrategy dbstrategy = new OracleStrategy();  //defult case  
 
     protected ArrayList items = null;
 
@@ -137,7 +138,7 @@ public class QueryFilter implements java.io.Serializable {
 
         Class c = val.getClass();
         String s = c.getName();
-
+        
         if ( s.equals( "java.lang.String" )
             || s.equals( "java.lang.StringBuffer" ) ) {
 
@@ -148,7 +149,9 @@ public class QueryFilter implements java.io.Serializable {
             StringBuffer buf = new StringBuffer();
             if ( comp == SQL.EQUALS_COL ) {
                 value = val.toString();
-            } else {
+            } else if( comp == SQL.REGEXP ) {
+            	value = dbstrategy.getRegexp(fieldname, val, caseSensitive);
+            }else {
                 buf.append( "'" );
                 if ( comp == SQL.LIKE || comp == SQL.ENDS )
                     buf.append( '%' );
@@ -206,53 +209,57 @@ public class QueryFilter implements java.io.Serializable {
 
         } else {
 
-            workbuf.append( colname );
+           // workbuf.append( colname );
 
             switch ( comparator ) {
 
                 case SQL.EQ:
-                    workbuf.append( " = " + value );
+                    workbuf.append( colname + " = " + value );
                     break;
 
                 case SQL.LIKE:
-                    workbuf.append( " LIKE " + value );
+                    workbuf.append( colname +  " LIKE " + value );
                     break;
 
                 case SQL.NE:
-                    workbuf.append( " != " + value );
+                    workbuf.append( colname +  " != " + value );
                     break;
 
                 case SQL.GT:
-                    workbuf.append( " > " + value );
+                    workbuf.append( colname +  " > " + value );
                     break;
 
                 case SQL.GTE:
-                    workbuf.append( " >= " + value );
+                    workbuf.append( colname +  " >= " + value );
                     break;
 
                 case SQL.LT:
-                    workbuf.append( " < " + value );
+                    workbuf.append( colname +  " < " + value );
                     break;
 
                 case SQL.LTE:
-                    workbuf.append( " <= " + value );
+                    workbuf.append( colname +  " <= " + value );
                     break;
 
                 case SQL.BEGINS:
-                    workbuf.append( " LIKE " + value );
+                    workbuf.append( colname +  " LIKE " + value );
                     break;
 
                 case SQL.ENDS:
-                    workbuf.append( " LIKE " + value );
+                    workbuf.append( colname +  " LIKE " + value );
                     break;
 
                 case SQL.IN:
-                    workbuf.append( " IN " + value.toString() );
+                    workbuf.append( colname +  " IN " + value.toString() );
                     break;
 
                 case SQL.EQUALS_COL:
-                    workbuf.append( " = " + value.toString() );
+                    workbuf.append( colname +  " = " + value.toString() );
                     break;
+                    
+                case SQL.REGEXP:  //regular expression for word boundaries
+                	workbuf.append(value);
+                	break;
             }
 
         }
@@ -280,4 +287,15 @@ public class QueryFilter implements java.io.Serializable {
 
         return identity_;
     }
+    
+    /**
+     * Defines the DBStrategy for the filter
+     * @param <code>dbStrategy</code> the DBStrategy passed in from the client
+     */
+    public void setDbStrategy( DBStrategy _dbstrategy ) {
+       dbstrategy = _dbstrategy;
+    }
+    
+ 
+        
 }
