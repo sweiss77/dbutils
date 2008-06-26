@@ -4,10 +4,10 @@ package gov.nasa.hq.sql;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class MySQLStrategy implements DBStrategy {
+public class MySQLStrategy extends DBStrategy {
 
 
-	public String getRegexp(String fieldname, Object value, boolean caseSensitive ) {
+	public String getRegexpWB(String fieldname, Object value, boolean caseSensitive ) {
 	  //implements MySQL's regular expression for word boundaries
 
         //MySQL regular expression for word boundary

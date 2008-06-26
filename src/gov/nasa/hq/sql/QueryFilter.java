@@ -149,8 +149,8 @@ public class QueryFilter implements java.io.Serializable {
             StringBuffer buf = new StringBuffer();
             if ( comp == SQL.EQUALS_COL ) {
                 value = val.toString();
-            } else if( comp == SQL.REGEXP ) {
-            	value = dbstrategy.getRegexp(fieldname, val, caseSensitive);
+            } else if( comp == SQL.REGEXP_WB ) {
+            	value = dbstrategy.getRegexpWB(fieldname, val, caseSensitive);
             }else {
                 buf.append( "'" );
                 if ( comp == SQL.LIKE || comp == SQL.ENDS )
@@ -257,7 +257,7 @@ public class QueryFilter implements java.io.Serializable {
                     workbuf.append( colname +  " = " + value.toString() );
                     break;
                     
-                case SQL.REGEXP:  //regular expression for word boundaries
+                case SQL.REGEXP_WB:  //regular expression for word boundaries
                 	workbuf.append(value);
                 	break;
             }

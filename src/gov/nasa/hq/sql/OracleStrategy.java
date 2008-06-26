@@ -4,10 +4,10 @@ package gov.nasa.hq.sql;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class OracleStrategy implements DBStrategy {
+public class OracleStrategy extends DBStrategy {
 
 
-	public String getRegexp(String fieldname, Object value, boolean caseSensitive ) {
+	public String getRegexpWB(String fieldname, Object value, boolean caseSensitive ) {
 		
 	  //implements Oracle's Regexp_Like regular expression for word boundaries
 	  
