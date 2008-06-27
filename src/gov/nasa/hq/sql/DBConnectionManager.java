@@ -10,7 +10,7 @@ import gov.nasa.hq.properties.*;
 
 /**
  * A singleton class which manages a pool of database connections.
- * @version $Revision$
+ * @version $Revision: 616 $
  * @author <a href="mailto:sweiss@hq.nasa.gov">Steve Weiss</a>
  */
 public class DBConnectionManager extends Thread {

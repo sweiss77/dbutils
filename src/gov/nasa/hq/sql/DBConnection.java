@@ -8,7 +8,7 @@ import java.util.*;
  * This is a proxy class which provides an interface to a
  * {@link java.sql.Connection} object. The {@link DBConnectionManager} class
  * manages a pool of these objects
- * @version $Revision$
+ * @version $Revision: 616 $
  * @author <a href="mailto:sweiss@hq.nasa.gov">Steve Weiss</a>
  */
 public class DBConnection {
