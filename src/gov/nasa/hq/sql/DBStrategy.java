@@ -13,11 +13,13 @@ import java.util.Date;
  */
 public abstract class DBStrategy {
 	
-	public static DBStrategy getInstance(String dbProductName) {
+	public static DBStrategy getInstance(String dbProductName)  throws DBStrategyException {
+		
 		
       //return a concrete DBStrategy object, using OracleStrategy as the default
-	  if (dbProductName.equals("MySQL")) return new MySQLStrategy();  
-	    else return new OracleStrategy();	
+	  if (dbProductName.toUpperCase().equals("MYSQL")) return new MySQLStrategy(); 
+	    else if (dbProductName.toUpperCase().equals("ORACLE")) return new OracleStrategy();  
+	    else throw new DBStrategyException( "Unsupported database vendor!" );	
 	}
 
 	public abstract String getRegexpWB(String fieldname, Object value, boolean caseSensitive ) ;
