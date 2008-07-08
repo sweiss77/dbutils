@@ -38,6 +38,8 @@ public abstract class SQL implements java.io.Serializable {
     public static final int ENDS   = 6;
     /** Symbolic constant which indicates SQL "IN" */
     public static final int IN     = 7;
+    /** Symbolic constant which indicates SQL "NOT" */
+    public static final int NOT    = 12;
     /**
      * Symbolic constant which indicates "=" applied to a column name,
      * rather than a value

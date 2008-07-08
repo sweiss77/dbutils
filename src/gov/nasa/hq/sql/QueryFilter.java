@@ -253,6 +253,10 @@ public class QueryFilter implements java.io.Serializable {
                     workbuf.append( colname +  " IN " + value.toString() );
                     break;
 
+                case SQL.NOT:
+                    workbuf.append( colname +  " NOT " + value );
+                    break;
+                    
                 case SQL.EQUALS_COL:
                     workbuf.append( colname +  " = " + value.toString() );
                     break;
