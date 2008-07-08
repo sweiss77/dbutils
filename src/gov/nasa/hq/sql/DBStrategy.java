@@ -1,8 +1,7 @@
 // $Id$ 
 package gov.nasa.hq.sql;
 
-import java.text.DateFormat;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * Abstract class to encapsulate database-specific behavior in this library. 
@@ -24,6 +23,6 @@ public abstract class DBStrategy {
 
 	public abstract String getRegexpWB(String fieldname, Object value, boolean caseSensitive ) ;
 	
-	public abstract DateFormat formatDate(Date date) ;
+	public abstract SimpleDateFormat getSimpleDateFormat();
 	
 }
