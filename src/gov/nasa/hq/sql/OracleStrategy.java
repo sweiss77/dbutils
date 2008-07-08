@@ -41,12 +41,11 @@ public class OracleStrategy extends DBStrategy {
 
     /**
      * Returns a java.text.SimpleDateFormat object which can be used to
-     * compare dates in a MySQL database
+     * compare dates in a Oracle database
      * @return SimpleDateFormat
      */
     public SimpleDateFormat getSimpleDateFormat() {
 
-        // FIXME - THIS IS THE MYSQL FORMAT
         return new SimpleDateFormat( "dd-MMM-yyyy kk:mm:ss" );
     }
 
