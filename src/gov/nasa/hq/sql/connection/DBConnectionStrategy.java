@@ -14,7 +14,6 @@ public abstract class DBConnectionStrategy {
 	
 	static final int PROPERTIES = 1;
 	static final int APP_PROPERTIES = 2;
-	static final int TURBINE = 3;
 	
 	public static DBConnectionStrategy getInstance(int type)  throws DBConnectionException {
 		
@@ -29,9 +28,6 @@ public abstract class DBConnectionStrategy {
 		  case 2:
 			  dbConnStr = new AppPropertiesConnectionStr();
 			  break;	  
-		  case 3: 
-			  dbConnStr = new TurbineConnectionStr();
-			  break;	 
 		  default: 
 			  throw new DBConnectionException("You need to specify a valid connection type.");
 	  }
