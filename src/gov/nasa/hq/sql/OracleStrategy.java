@@ -8,7 +8,7 @@ import java.util.Date;
 public class OracleStrategy extends DBStrategy {
 
     /**
-     * Implements MySQL's regular expression for word boundaries
+     * Implements Oracle's regular expression for word boundaries
      * @param fieldname
      * @param value
      * @param caseSensitive
@@ -46,7 +46,7 @@ public class OracleStrategy extends DBStrategy {
      */
     public SimpleDateFormat getSimpleDateFormat() {
 
-        return new SimpleDateFormat( "dd-MMM-yyyy kk:mm:ss" );
+        return new SimpleDateFormat( "dd-MMM-yy" );
     }
 
 }
