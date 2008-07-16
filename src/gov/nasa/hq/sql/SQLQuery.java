@@ -160,15 +160,17 @@ public class SQLQuery implements java.io.Serializable {
 
         // THIS WILL PROBABLY NEED MORE WORK TO DETERMINE THE ORDER OF THE
         // ORDER BY AND GROUP BY CLAUSES
+        if ( _groupBy != null ) {
+            work.append( ' ' );
+            work.append( _groupBy.getContent() );
+        }
+        
         if ( _orderBy != null ) {
             work.append( ' ' );
             work.append( _orderBy.getContent() );
         }
 
-        if ( _groupBy != null ) {
-            work.append( ' ' );
-            work.append( _groupBy.getContent() );
-        }
+        
 
         return ( new String( work ) );
     }
