@@ -158,8 +158,7 @@ public class SQLQuery implements java.io.Serializable {
 
         }
 
-        // THIS WILL PROBABLY NEED MORE WORK TO DETERMINE THE ORDER OF THE
-        // ORDER BY AND GROUP BY CLAUSES
+        // The GROUP BY clause *must* come before the ORDER BY clause
         if ( _groupBy != null ) {
             work.append( ' ' );
             work.append( _groupBy.getContent() );
