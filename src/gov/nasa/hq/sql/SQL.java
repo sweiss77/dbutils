@@ -70,7 +70,7 @@ public abstract class SQL implements java.io.Serializable {
     /** @deprecated */
     public static final String GROUP_BY = "GROUP BY";
 
-    protected ArrayList items = null;
+    protected List items = null;
 
     /** Used to build the actual SQL statement */
     protected StringBuffer workbuf = null;
@@ -97,7 +97,7 @@ public abstract class SQL implements java.io.Serializable {
         init( keyword );
     }
 
-    protected SQL( String keyword, ArrayList list ) {
+    protected SQL( String keyword, List list ) {
 
         this( keyword );
         setItems( list );
@@ -127,30 +127,10 @@ public abstract class SQL implements java.io.Serializable {
         }
     }
 
-    protected void setItems( ArrayList list ) {
+    protected void setItems( List list ) {
         for ( int i = 0; i < list.size(); i++ ) {
             items.add( list.get( i ) );
         }
-    }
-
-    /** @deprecated */
-    public void debug( String message, int level ) {
-        //if ( debug ) _logMgr.debug( _myName + " - " + message, level );
-    }
-
-    /** @deprecated */
-    public void debug( String message ) {
-        //if ( debug ) _logMgr.debug( _myName + " - " + message );
-    }
-
-    /** @deprecated */
-    public void logStackTrace( Exception ex ) {
-        //if ( debug ) _logMgr.logStackTrace( _myName, ex );
-    }
-
-    /** @deprecated */
-    public void debugStackTrace( Exception ex ) {
-        //if ( debug ) _logMgr.debugStackTrace( _myName, ex );
     }
 
     /**
