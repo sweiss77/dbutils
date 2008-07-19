@@ -4,6 +4,7 @@ package gov.nasa.hq.sql;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class OracleStrategy extends DBStrategy {
 
@@ -18,7 +19,7 @@ public class OracleStrategy extends DBStrategy {
                                Object value,
                                boolean caseSensitive ) {
 
-         //Oracle regular expression for word boundary   	
+        //Oracle regular expression for word boundary   	
         StringBuffer buf = new StringBuffer();
         buf.append( "REGEXP_LIKE(" );
         buf.append( fieldname );
@@ -47,6 +48,11 @@ public class OracleStrategy extends DBStrategy {
     public SimpleDateFormat getSimpleDateFormat() {
 
         return new SimpleDateFormat( "dd-MMM-yy" );
+    }
+
+    public boolean requireAllSelectColumnsInGroupBy() {
+
+        return true;
     }
 
 }

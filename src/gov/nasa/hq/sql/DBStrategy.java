@@ -1,4 +1,5 @@
 // $Id$ 
+
 package gov.nasa.hq.sql;
 
 import java.text.SimpleDateFormat;
@@ -11,18 +12,28 @@ import java.text.SimpleDateFormat;
  *
  */
 public abstract class DBStrategy {
-	
-	public static DBStrategy getInstance(String dbProductName)  throws DBStrategyException {
-		
-		
-      //return a concrete DBStrategy object
-	  if (dbProductName.toUpperCase().equals("MYSQL")) return new MySQLStrategy(); 
-	    else if (dbProductName.toUpperCase().equals("ORACLE")) return new OracleStrategy();  
-	    else throw new DBStrategyException( "Unsupported database vendor!" );	
-	}
 
-	public abstract String getRegexpWB(String fieldname, Object value, boolean caseSensitive ) ;
-	
-	public abstract SimpleDateFormat getSimpleDateFormat();
-	
+    public static DBStrategy getInstance( String dbProductName )
+        throws DBStrategyException {
+
+        //return a concrete DBStrategy object
+        if ( dbProductName.toUpperCase().equals( "MYSQL" ) ) {
+            return new MySQLStrategy();
+        } else if ( dbProductName.toUpperCase().equals( "ORACLE" ) ) {
+            return new OracleStrategy();
+        } else {
+            throw new DBStrategyException( "Unsupported database vendor!" );
+        }
+    }
+
+    public boolean requireAllSelectColumnsInGroupBy() {
+
+        return false;
+    }
+
+    public abstract String getRegexpWB( String fieldname,
+                                        Object value,
+                                        boolean caseSensitive );
+
+    public abstract SimpleDateFormat getSimpleDateFormat();
 }
