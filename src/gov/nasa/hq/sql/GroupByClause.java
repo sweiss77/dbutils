@@ -1,7 +1,8 @@
-
 // $Id$
 
 package gov.nasa.hq.sql;
+
+import java.util.List;
 
 /**
  * Creates a SQL "GROUP BY" clause
@@ -9,29 +10,44 @@ package gov.nasa.hq.sql;
 public class GroupByClause extends SQL {
 
     public GroupByClause() {
+
         super( "GROUP BY" );
     }
 
     public GroupByClause( String s ) {
+
         this();
         append( s );
+    }
+
+    public GroupByClause( List columns ) {
+
+        this();
+        String[] cols = new String[columns.size()];
+
+        for ( int i = 0; i < columns.size(); i++ ) {
+            if ( i > 0 ) {
+                append( ", " );
+            }
+            cols[i] = (String) columns.get( i );
+            append( cols[i] );
+        }
     }
 
     public GroupByClause( String[] s ) {
 
         this();
 
-        int i = 0;
-
-        for ( i = 0; i < s.length - 1; i++ ) {
+        for ( int i = 0; i < s.length; i++ ) {
+            if ( i > 0 ) {
+                append( ", " );
+            }
             append( s[i] );
-            append( ", " );
         }
-
-        append( s[i] );
     }
 
     public String getContent() {
+
         return toString();
     }
 }
