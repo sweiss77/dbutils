@@ -26,6 +26,13 @@ public abstract class DBStrategy {
         }
     }
 
+    /**
+     * By default returns false, but child classes should over-ride and
+     * return true if the database requires all columns from the
+     * SELECT CLAUSE to be in the GROUP BY clause
+     * 
+     * @return boolean
+     */
     public boolean requireAllSelectColumnsInGroupBy() {
 
         return false;
