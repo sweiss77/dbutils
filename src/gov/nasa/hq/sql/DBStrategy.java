@@ -43,4 +43,5 @@ public abstract class DBStrategy {
                                         boolean caseSensitive );
 
     public abstract SimpleDateFormat getSimpleDateFormat();
+    public abstract SimpleDateFormat getSimpleDateTimeFormat();
 }

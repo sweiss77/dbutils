@@ -39,4 +39,8 @@ public class MySQLStrategy extends DBStrategy {
         return new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
     }
 
+    public SimpleDateFormat getSimpleDateTimeFormat() {
+        return getSimpleDateFormat();
+    }
+
 }

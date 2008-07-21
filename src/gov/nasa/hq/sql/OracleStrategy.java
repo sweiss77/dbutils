@@ -50,6 +50,10 @@ public class OracleStrategy extends DBStrategy {
         return new SimpleDateFormat( "dd-MMM-yy" );
     }
 
+    public SimpleDateFormat getSimpleDateTimeFormat() {
+        return new SimpleDateFormat( "dd-MM-yy HH:mm:ss.S" );
+    }
+
     public boolean requireAllSelectColumnsInGroupBy() {
 
         return true;
