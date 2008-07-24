@@ -24,6 +24,9 @@ public class OracleStrategy extends DBStrategy {
         buf.append( "REGEXP_LIKE(" );
         buf.append( fieldname );
         buf.append( ", '(^" );
+        buf.append( value.toString());
+        buf.append( "$)|");
+        buf.append( "(^" );
         buf.append( value.toString() );
         buf.append( "[[:blank:]|[:punct:]])|([[:blank:]|[:punct:]]" );
         buf.append( value.toString() );
