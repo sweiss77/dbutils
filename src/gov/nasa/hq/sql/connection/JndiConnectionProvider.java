@@ -21,6 +21,10 @@ public class JndiConnectionProvider implements ConnectionProvider {
     Connection conn_ = null;
     String datasource_ = null;
 
+    public JndiConnectionProvider( String dataSource ) {
+        datasource_ = dataSource;
+    }
+
     /**
      * Sets the name of the data source
      * @param properties
