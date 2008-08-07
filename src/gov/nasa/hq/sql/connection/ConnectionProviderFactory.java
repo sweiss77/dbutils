@@ -15,7 +15,7 @@ public class ConnectionProviderFactory {
      * @return {@link ConnectionProvider}
      * @throws {@link ConnectionProviderException}
      */
-    public ConnectionProvider getConnectionProvider()
+    public static ConnectionProvider getConnectionProvider()
         throws ConnectionProviderException {
 
         return getConnectionProvider( "default" );
@@ -30,7 +30,7 @@ public class ConnectionProviderFactory {
      * @return {@link ConnectionProvider}
      * @throws {@link ConnectionProviderException}
      */
-    public ConnectionProvider getConnectionProvider( String name )
+    public static ConnectionProvider getConnectionProvider( String name )
         throws ConnectionProviderException {
 
         ConnectionProvider provider = null;
