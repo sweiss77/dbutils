@@ -20,6 +20,16 @@ public class InClause extends SQL {
     }
 
     /**
+     * Constructor which takes a {@link SQLQuery} object as an argument. The
+     * should be used to add sub-queries to the SQL
+     * @param subquery
+     */
+    public InClause( SQLQuery subquery ) {
+        this();
+        append( subquery.getSQL() );
+    }
+
+    /**
      * The constructor takes an <code>ArrayList</code> of items to be contained
      * in the "IN" clause of the SQL statement. The first item in the list is
      * checked to see if it is either a <code>String</code> or
