@@ -18,7 +18,16 @@ public class InClause extends SQL {
     public InClause() {
         super();
     }
-
+    
+    /**
+     * Constructor which takes a string as an argument
+     */
+    
+    public InClause( String sub ) {
+        this();
+        append( sub);
+    }
+    
     /**
      * Constructor which takes a {@link SQLQuery} object as an argument. The
      * should be used to add sub-queries to the SQL
@@ -26,7 +35,7 @@ public class InClause extends SQL {
      */
     public InClause( SQLQuery subquery ) {
         this();
-        append( subquery.getSQL() );
+        append( subquery.getSQL());
     }
 
     /**
