@@ -46,12 +46,12 @@ public class JndiConnectionProvider implements ConnectionProvider {
 
         try {
 
+            // TODO - Need to add code to work with OC4J
             // Get our environment naming context
             Context init_ctx = new InitialContext();
-            Context env_ctx = (Context) init_ctx.lookup( "java:comp/env" );
 
             // Look up our data source
-            DataSource ds = (DataSource) env_ctx.lookup( datasource_ );
+            DataSource ds = (DataSource) init_ctx.lookup( datasource_ );
 
             // Allocate and use a connection from the pool
             conn_ = ds.getConnection();
