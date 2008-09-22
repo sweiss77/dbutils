@@ -18,7 +18,7 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="name" value="hq_sqlutils" />
         <property name="version.major" value="0" />
         <property name="version.minor" value="9" />
-        <property name="version.dot" value="2-beta" />
+        <property name="version.dot" value="2" />
         <property name="version" value="${version.major}.${version.minor}.${version.dot}" />
         <property name="version.underscore" value="${version.major}_${version.minor}_${version.dot}" />
         <property name="release.dir" value="./releases/${name}-${version}" />
@@ -28,7 +28,7 @@ For instructions on how to build the library, please view the README.txt file.
         <echo message="----------- ${Name} ${version} [${year}] ------------" />
 
         <!-- <property name="build.compiler" value="classic"/> -->
-        <property name="debug" value="on" />
+        <property name="debug" value="off" />
         <property name="optimize" value="on" />
         <property name="deprecation" value="on" />
 
