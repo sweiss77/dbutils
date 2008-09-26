@@ -5,6 +5,7 @@ package gov.nasa.hq.sql;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import gov.nasa.hq.util.StringUtil;
 
 public class OracleStrategy extends DBStrategy {
 
@@ -60,6 +61,13 @@ public class OracleStrategy extends DBStrategy {
     public boolean requireAllSelectColumnsInGroupBy() {
 
         return true;
+    }
+    
+    public String replace( String str ){
+    	if ( str.contains( "'" ))
+        	str = StringUtil.replace( str, "'", "\\''" );
+    	
+    	return str;
     }
 
 }

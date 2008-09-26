@@ -5,6 +5,7 @@ package gov.nasa.hq.sql;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import gov.nasa.hq.util.StringUtil;
 
 public class MySQLStrategy extends DBStrategy {
 
@@ -43,4 +44,10 @@ public class MySQLStrategy extends DBStrategy {
         return getSimpleDateFormat();
     }
 
+    public String replace( String str ){
+    	if ( str.contains( "'" ))
+        	str = StringUtil.replace( str, "'", "\\'" );
+    	
+    	return str;
+    }
 }

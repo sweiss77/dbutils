@@ -3,6 +3,7 @@
 package gov.nasa.hq.sql;
 
 import java.text.SimpleDateFormat;
+import gov.nasa.hq.util.StringUtil;
 
 /**
  * Abstract class to encapsulate database-specific behavior in this library. 
@@ -44,4 +45,5 @@ public abstract class DBStrategy {
 
     public abstract SimpleDateFormat getSimpleDateFormat();
     public abstract SimpleDateFormat getSimpleDateTimeFormat();
+    public abstract String replace( String str );
 }
