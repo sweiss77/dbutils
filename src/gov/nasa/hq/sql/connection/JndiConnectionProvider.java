@@ -21,7 +21,13 @@ public class JndiConnectionProvider implements ConnectionProvider {
     Connection conn_ = null;
     String datasource_ = null;
 
+    public JndiConnectionProvider() {
+
+        // Empty constructor is needed by ConnectionProviderFactory
+    }
+
     public JndiConnectionProvider( String dataSource ) {
+
         datasource_ = dataSource;
     }
 
