@@ -24,7 +24,7 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="version.underscore" value="${version.major}_${version.minor}_${version.dot}" />
         <property name="release.dir" value="./releases/${name}-${version}" />
         <property name="year" value="2008" />
-        <property name="jarfile" value="${name}-${version.major}_${version.minor}_${version.dot}.jar" />
+        <property name="jarfile" value="${name}-${version.major}.${version.minor}.${version.dot}.jar" />
 
         <echo message="----------- ${Name} ${version} [${year}] ------------" />
 
@@ -133,7 +133,15 @@ For instructions on how to build the library, please view the README.txt file.
     <target name="jar" depends="compile">
         <fixcrlf srcdir="." includes="**/*.bat" excludes="build*.*" eol="crlf" />
         <fixcrlf srcdir="." includes="**/*.sh" excludes="build*.*" eol="lf" />
-        <jar jarfile="${build.dir}/${jarfile}" basedir="${build.dest}" />
+        <jar jarfile="${build.dir}/${jarfile}" basedir="${build.dest}">
+          <manifest>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Implementation-Vendor" value="Indyne Inc."/>
+            <attribute name="Implementation-Title" value="${Name}"/>
+            <attribute name="Implementation-Version" value="${version}"/>
+            <attribute name="jar-name" value="${jarfile}"/>
+          </manifest>
+        </jar>
     </target>
 
     <!--
