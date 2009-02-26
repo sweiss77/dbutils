@@ -19,29 +19,31 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="name" value="hq_sqlutils" />
         <property name="version.major" value="0" />
         <property name="version.minor" value="9" />
-        <property name="version.dot" value="2" />
-        <property name="version" value="${version.major}.${version.minor}.${version.dot}" />
-        <property name="version.underscore" value="${version.major}_${version.minor}_${version.dot}" />
-        <property name="release.dir" value="./releases/${name}-${version}" />
-        <property name="year" value="2008" />
-        <property name="jarfile" value="${name}-${version.major}.${version.minor}.${version.dot}.jar" />
+        <property name="version.dot" value="3" />
+        <property name="version"
+                  value="${version.major}.${version.minor}.${version.dot}" />
+        <property name="version.underscore"
+                  value="${version.major}_${version.minor}_${version.dot}" />
+        <property name="dist.dir" value="./dist/${name}-${version}" />
+        <property name="year" value="2009" />
+        <property name="jarfile"
+                  value="${name}-${version.major}.${version.minor}.${version.dot}.jar" />
 
         <echo message="----------- ${Name} ${version} [${year}] ------------" />
 
-        <!-- <property name="build.compiler" value="classic"/> -->
         <property name="debug" value="off" />
         <property name="optimize" value="on" />
         <property name="deprecation" value="on" />
 
         <property name="src.dir" value="./src" />
-        <!-- <property name="samples.dir" value="./samples"/> -->
         <property name="lib.dir" value="./lib" />
         <property name="packages" value="gov.nasa.hq.*" />
 
         <property name="build.dir" value="./build" />
         <property name="build.src" value="./build/src" />
         <property name="build.dest" value="./build/classes" />
-        <property name="build.javadocs" value="./build/apidocs" />
+        <property name="javadoc.root" value="${build.dir}/javadoc" />
+        <property name="build.javadocs" value="${javadoc.root}/${name}/apidocs" />
 
         <property name="dist.root" value="./dist" />
         <property name="dist.dir" value="${dist.root}/${name}-${version}" />
@@ -53,6 +55,20 @@ For instructions on how to build the library, please view the README.txt file.
         <filter token="date" value="${TODAY}" />
         <filter token="log" value="true" />
         <filter token="verbose" value="true" />
+
+        <!-- Release properties -->
+        <property name="remoteUser" value="sweiss" />
+        <property name="release.root" value="./release" />
+        <property name="release.dir"
+                  value="${release.root}/${name}/${version}" />
+        <property name="ivy.repo.host" value="osiris.hitsshq.com" />
+        <property name="ivy.repo.dir"
+                  value="/usr/local/data/www/htdocs/ivy/nasa/hq" />
+        <property name="ivy.repo" value="${ivy.repo.host}:${ivy.repo.dir}" />
+        <property name="ivy.module.version" value="1.3" />
+
+        <property name="javadoc.publish.host" value="osiris.hitsshq.com" />
+        <property name="javadoc.publish.path" value="/usr/local/data/www/htdocs/share/docs/java/javadocs" />
 
     </target>
 
@@ -104,7 +120,12 @@ For instructions on how to build the library, please view the README.txt file.
     <!-- =================================================================== -->
     <target name="compile" depends="prepare-src">
         <echo message="Compiling with flags: debug = ${debug}, optimize = ${optimize} deprecation = ${deprecation}" />
-        <javac srcdir="src" destdir="${build.dest}" debug="${debug}" verbose="${verbose}" deprecation="${deprecation}" optimize="${optimize}">
+        <javac srcdir="src"
+               destdir="${build.dest}"
+               debug="${debug}"
+               verbose="${verbose}"
+               deprecation="${deprecation}"
+               optimize="${optimize}">
             <classpath>
                 <pathelement path="${build.dest}" />
                 <fileset dir="${lib.dir}">
@@ -118,35 +139,45 @@ For instructions on how to build the library, please view the README.txt file.
     <!-- Compiles the "About" code                                           -->
     <!-- =================================================================== -->
     <target name="about">
-        <javac srcdir="${package.dir}" destdir="${build.dest}" debug="${debug}" verbose="${verbose}" optimize="${optimize}" />
+        <javac srcdir="${package.dir}"
+               destdir="${build.dest}"
+               debug="${debug}"
+               verbose="${verbose}"
+               optimize="${optimize}" />
     </target>
 
-    <target name="build-share" depends="jar" 
-        description="Moves generated jar file to share/common/deploy/lib." >
-      <echo message="Checking ../../common/deploy/lib/${jarfile}" />
-      <copy file="${build.dir}/${jarfile}" tofile="../../common/deploy/lib/${jarfile}" filtering="no" />
+    <target name="build-share"
+            depends="jar"
+            description="Moves generated jar file to share/common/deploy/lib.">
+        <echo message="Checking ../../common/deploy/lib/${jarfile}" />
+        <copy file="${build.dir}/${jarfile}"
+              tofile="../../common/deploy/lib/${jarfile}"
+              filtering="no" />
     </target>
 
     <!-- =================================================================== -->
     <!-- Creates the JAR file                                                -->
     <!-- =================================================================== -->
     <target name="jar" depends="compile">
-        <fixcrlf srcdir="." includes="**/*.bat" excludes="build*.*" eol="crlf" />
+        <fixcrlf srcdir="."
+                 includes="**/*.bat"
+                 excludes="build*.*"
+                 eol="crlf" />
         <fixcrlf srcdir="." includes="**/*.sh" excludes="build*.*" eol="lf" />
         <jar jarfile="${build.dir}/${jarfile}" basedir="${build.dest}">
-          <manifest>
-            <attribute name="Built-By" value="${user.name}"/>
-            <attribute name="Implementation-Vendor" value="Indyne Inc."/>
-            <attribute name="Implementation-Title" value="${Name}"/>
-            <attribute name="Implementation-Version" value="${version}"/>
-            <attribute name="jar-name" value="${jarfile}"/>
-          </manifest>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}" />
+                <attribute name="Implementation-Vendor" value="Indyne Inc." />
+                <attribute name="Implementation-Title" value="${Name}" />
+                <attribute name="Implementation-Version" value="${version}" />
+                <attribute name="jar-name" value="${jarfile}" />
+            </manifest>
         </jar>
     </target>
 
     <!--
        This target just sets compiler flags so that the code will
-       be optimized when running the release target
+       be optimized when running the dist target
     -->
     <target name="optimize">
         <property name="debug" value="off" />
@@ -155,21 +186,23 @@ For instructions on how to build the library, please view the README.txt file.
     </target>
 
     <!-- Builds a .tar.gz file containing all needed JAR files, JSPs and docs -->
-    <target name="release" depends="optimize,clean,compile">
-        <echo message="creating release directory: ${release.dir}" />
-        <mkdir dir="${release.dir}" />
-        <mkdir dir="${release.dir}/docs" />
-        <copy todir="${release.dir}/docs">
+    <target name="dist" depends="optimize,clean,compile">
+        <echo message="creating dist directory: ${dist.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${dist.dir}/docs" />
+        <copy todir="${dist.dir}/docs">
             <fileset dir="./docs">
                 <include name="**/*.txt" />
             </fileset>
         </copy>
-        <jar jarfile="${release.dir}/${name}-${version.underscore}.jar" basedir="${build.dir}/classes" />
-        <tar tarfile="./releases/${name}-${version.underscore}.tar">
-            <tarfileset dir="${release.dir}" />
+        <jar jarfile="${dist.dir}/${name}-${version.underscore}.jar"
+             basedir="${build.dir}/classes" />
+        <tar tarfile="./dist/${name}-${version.underscore}.tar">
+            <tarfileset dir="${dist.dir}" />
         </tar>
-        <gzip zipfile="./releases/${name}-${version.underscore}.tar.gz" src="./releases/${name}-${version.underscore}.tar" />
-        <delete file="./releases/${name}-${version.underscore}.tar" />
+        <gzip zipfile="./dist/${name}-${version.underscore}.tar.gz"
+              src="./dist/${name}-${version.underscore}.tar" />
+        <delete file="./dist/${name}-${version.underscore}.tar" />
         <delete dir="${build.dir}" />
     </target>
 
@@ -178,15 +211,26 @@ For instructions on how to build the library, please view the README.txt file.
     <!-- =================================================================== -->
     <target name="javadoc" depends="prepare-src">
         <mkdir dir="${build.javadocs}" />
-        <javadoc packagenames="${packages}" sourcepath="${build.src}" destdir="${build.javadocs}" author="true" version="true" use="true" splitindex="true" noindex="false" windowtitle="${Vendor} ${Name} API" doctitle="${Name}">
+        <javadoc packagenames="${packages}"
+                 sourcepath="${build.src}"
+                 destdir="${build.javadocs}"
+                 author="true"
+                 version="true"
+                 use="true"
+                 splitindex="true"
+                 noindex="false"
+                 windowtitle="${Vendor} ${Name} API"
+                 doctitle="${Name}">
             <classpath>
                 <pathelement path="${build.dest}" />
                 <fileset dir="${lib.dir}">
                     <include name="**/*.jar" />
                 </fileset>
-                <fileset dir="${tomcat.home}/common/lib">
+                <!--
+                <fileset dir="${catalina.home}/lib">
                     <include name="**/*.jar" />
                 </fileset>
+                -->
             </classpath>
         </javadoc>
     </target>
@@ -197,7 +241,17 @@ For instructions on how to build the library, please view the README.txt file.
     <!-- =================================================================== -->
     <target name="javadoc-link" depends="prepare-src">
         <mkdir dir="${build.javadocs}" />
-        <javadoc packagenames="${packages}" sourcepath="${build.src}" destdir="${build.javadocs}" author="true" version="true" use="true" splitindex="true" noindex="false" windowtitle="${Name} API" doctitle="${Name}" link="http://java.sun.com/j2se/1.4/docs/api" />
+        <javadoc packagenames="${packages}"
+                 sourcepath="${build.src}"
+                 destdir="${build.javadocs}"
+                 author="true"
+                 version="true"
+                 use="true"
+                 splitindex="true"
+                 noindex="false"
+                 windowtitle="${Name} API"
+                 doctitle="${Name}"
+                 link="http://java.sun.com/j2se/1.5/docs/api" />
     </target>
 
     <!-- =================================================================== -->
@@ -205,6 +259,8 @@ For instructions on how to build the library, please view the README.txt file.
     <!-- =================================================================== -->
     <target name="clean" depends="init">
         <delete dir="${build.dir}" />
+        <delete dir="${dist.dir} " />
+        <delete dir="${release.root}" />
     </target>
 
     <target name="distclean" depends="clean">
@@ -212,6 +268,52 @@ For instructions on how to build the library, please view the README.txt file.
         <delete file="${Name}-${version}.tar.gz" />
         <delete file="${Name}-${version}.tar" />
         <delete file="${Name}-${version}.zip" />
+    </target>
+
+    <target name="release-prepare" depends="jar">
+        <echo message="Creating release directory: ${release.dir}" />
+        <mkdir dir="${release.dir}" />
+        <echo message="Copying ${jarfile} to ${release.dir}" />
+        <copy file="${build.dir}/${jarfile}" todir="${release.dir}" />
+        <echo message="Generating ivy.xml" />
+        <echoxml file="${release.dir}/ivy.xml">
+            <ivy-module version="${ivy.module.version}">
+                <info organisation="nasa.hq"
+                      module="${name}"
+                      revision="${version}"
+                      status="release">
+                    <license name="Apache-style" />
+                    <ivyauthor name="hq" url="http://osiris.hitsshq.com/ivy" />
+                    <description homepage="http://osiris.hitsshq.com">
+                        Database Utilities
+                    </description>
+                </info>
+            </ivy-module>
+        </echoxml>
+    </target>
+
+    <target name="release" depends="release-prepare">
+        <input message="Username (${ivy.repo.host}):"
+               addproperty="username"
+               defaultvalue="${remoteUser}" />
+        <input message="Password (CAUTION, THIS WILL BE ECHOED!):" addproperty="password" />
+        <scp todir="${username}:${password}@${ivy.repo}">
+            <fileset dir="${release.root}" />
+        </scp>
+    </target>
+    
+    <target name="javadoc-publish" depends="javadoc-link">
+        <input message="Username (${javadoc.publish.host}):"
+               addproperty="username"
+               defaultvalue="${remoteUser}" />
+        <input message="Password (CAUTION, THIS WILL BE ECHOED!):" addproperty="password" />
+        <scp todir="${username}:${password}@${javadoc.publish.host}:${javadoc.publish.path}">
+            <fileset dir="${javadoc.root}" />
+        </scp>
+    </target>
+
+    <target name="release-clean" depends="init">
+        <delete dir="${release.root}" />
     </target>
 
 </project>
