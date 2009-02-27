@@ -21,7 +21,7 @@ For instructions on how to build the library, please view the README.txt file.
                           value="Database Utilities" />
         <property name="version.major" value="0" />
         <property name="version.minor" value="9" />
-        <property name="version.dot" value="3" />
+        <property name="version.dot" value="3rc1" />
         <property name="version"
                   value="${version.major}.${version.minor}.${version.dot}" />
         <property name="version.underscore"
