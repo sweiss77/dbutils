@@ -269,7 +269,7 @@ For instructions on how to build the library, please view the README.txt file.
         </subant>
     </target>
 
-    <target name="release" depends="jar">
+    <target name="release" depends="clean,optimize,jar">
         <subant target="release" inheritall="true" inheritrefs="true">
             <filelist dir="./release" files="build.xml" />
         </subant>
