@@ -17,9 +17,11 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="vendor" value="nasa_hq" />
         <property name="Name" value="NASA HQ Java SQL Utilities" />
         <property name="name" value="hq_sqlutils" />
+        <property name="project-description"
+                          value="Database Utilities" />
         <property name="version.major" value="0" />
         <property name="version.minor" value="9" />
-        <property name="version.dot" value="3" />
+        <property name="version.dot" value="4" />
         <property name="version"
                   value="${version.major}.${version.minor}.${version.dot}" />
         <property name="version.underscore"
@@ -55,17 +57,6 @@ For instructions on how to build the library, please view the README.txt file.
         <filter token="date" value="${TODAY}" />
         <filter token="log" value="true" />
         <filter token="verbose" value="true" />
-
-        <!-- Release properties -->
-        <property name="remoteUser" value="sweiss" />
-        <property name="release.root" value="./release" />
-        <property name="release.dir"
-                  value="${release.root}/${name}/${version}" />
-        <property name="ivy.repo.host" value="osiris.hitsshq.com" />
-        <property name="ivy.repo.dir"
-                  value="/usr/local/data/www/htdocs/ivy/nasa/hq" />
-        <property name="ivy.repo" value="${ivy.repo.host}:${ivy.repo.dir}" />
-        <property name="ivy.module.version" value="1.3" />
 
         <property name="javadoc.publish.host" value="osiris.hitsshq.com" />
         <property name="javadoc.publish.path" value="/usr/local/data/www/htdocs/share/docs/java/javadocs" />
@@ -236,7 +227,7 @@ For instructions on how to build the library, please view the README.txt file.
     </target>
 
     <!-- =================================================================== -->
-    <!-- Creates the API documentation, with links to JDK 1.4 classes        -->
+    <!-- Creates the API documentation, with links to JDK 1.5 classes        -->
     <!-- We can use linkoffline with a newer Ant and avoid this target       -->
     <!-- =================================================================== -->
     <target name="javadoc-link" depends="prepare-src">
@@ -270,38 +261,20 @@ For instructions on how to build the library, please view the README.txt file.
         <delete file="${Name}-${version}.zip" />
     </target>
 
+    <!-- Release targets -->
+
     <target name="release-prepare" depends="jar">
-        <echo message="Creating release directory: ${release.dir}" />
-        <mkdir dir="${release.dir}" />
-        <echo message="Copying ${jarfile} to ${release.dir}" />
-        <copy file="${build.dir}/${jarfile}" todir="${release.dir}" />
-        <echo message="Generating ivy.xml" />
-        <echoxml file="${release.dir}/ivy.xml">
-            <ivy-module version="${ivy.module.version}">
-                <info organisation="nasa.hq"
-                      module="${name}"
-                      revision="${version}"
-                      status="release">
-                    <license name="Apache-style" />
-                    <ivyauthor name="hq" url="http://osiris.hitsshq.com/ivy" />
-                    <description homepage="http://osiris.hitsshq.com">
-                        Database Utilities
-                    </description>
-                </info>
-            </ivy-module>
-        </echoxml>
+        <subant target="release-prepare" inheritall="true" inheritrefs="true">
+            <filelist dir="./release" files="build.xml" />
+        </subant>
     </target>
 
-    <target name="release" depends="release-prepare">
-        <input message="Username (${ivy.repo.host}):"
-               addproperty="username"
-               defaultvalue="${remoteUser}" />
-        <input message="Password (CAUTION, THIS WILL BE ECHOED!):" addproperty="password" />
-        <scp todir="${username}:${password}@${ivy.repo}">
-            <fileset dir="${release.root}" />
-        </scp>
+    <target name="release" depends="clean,optimize,jar">
+        <subant target="release" inheritall="true" inheritrefs="true">
+            <filelist dir="./release" files="build.xml" />
+        </subant>
     </target>
-    
+
     <target name="javadoc-publish" depends="javadoc-link">
         <input message="Username (${javadoc.publish.host}):"
                addproperty="username"
@@ -310,10 +283,6 @@ For instructions on how to build the library, please view the README.txt file.
         <scp todir="${username}:${password}@${javadoc.publish.host}:${javadoc.publish.path}">
             <fileset dir="${javadoc.root}" />
         </scp>
-    </target>
-
-    <target name="release-clean" depends="init">
-        <delete dir="${release.root}" />
     </target>
 
 </project>
