@@ -1,0 +1,13 @@
+# $Id$
+
+version.major=1
+version.minor=0
+version.dot=0
+
+ivy.base=ivy
+ivy.project=share/dbutils
+ivy.repository.base=/home/djg/ivy-repository
+ivy.target=development
+ivy.lib=${ivy.repository.base}/${ivy.project}/${ivy.target}/lib
+ivy.dep.dir=../${ivy.target}
+ivy.dep.file=ivy.xml

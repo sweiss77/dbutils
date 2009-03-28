@@ -5,6 +5,8 @@ For instructions on how to build the library, please view the README.txt file.
 -->
 
 <project default="jar" basedir=".">
+  <property name="propertyFileName" value="build.properties" />
+  <property file="${propertyFileName}" />
 
     <!-- =================================================================== -->
     <!-- Initialization target                                               -->
@@ -19,9 +21,6 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="name" value="hq_sqlutils" />
         <property name="project-description"
                           value="Database Utilities" />
-        <property name="version.major" value="0" />
-        <property name="version.minor" value="9" />
-        <property name="version.dot" value="4" />
         <property name="version"
                   value="${version.major}.${version.minor}.${version.dot}" />
         <property name="version.underscore"
@@ -119,12 +118,33 @@ For instructions on how to build the library, please view the README.txt file.
                optimize="${optimize}">
             <classpath>
                 <pathelement path="${build.dest}" />
-                <fileset dir="${lib.dir}">
+                <fileset dir="${ivy.lib}">
                     <include name="**/*.jar" />
                 </fileset>
             </classpath>
         </javac>
     </target>
+
+  <!-- =================================================================== -->
+  <!-- ivy sub-component                                                -->
+  <!-- =================================================================== -->
+  <propertyset id="ivy-properties">
+    <propertyref prefix="ivy"/>
+  </propertyset>
+
+  <target name="ivyclean" description="Call ivy/ivyclean to remove jar library directory." >
+    <subant target="ivyclean" inheritrefs="true">
+      <propertyset refid="ivy-properties" />
+      <filelist dir="${ivy.base}" files="build.xml" />
+    </subant>
+	</target>
+
+  <target name="ivyresolve" description="Call ivy/ivyresolve to build jar library.">
+    <subant target="ivyresolve" inheritrefs="true">
+      <propertyset refid="ivy-properties" />
+      <filelist dir="${ivy.base}" files="build.xml" />
+    </subant>
+  </target>
 
     <!-- =================================================================== -->
     <!-- Compiles the "About" code                                           -->

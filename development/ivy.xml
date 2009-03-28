@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- $Id$ -->
+<ivy-module version="2.0">
+    <info organisation="Indyne" module="Portal Calendar"/>
+    <configurations>
+    	<conf name="default"  description="Default configuration."/>
+      <conf name="log4j12"  description="Give me the log4j12 only."/>
+    </configurations>
+    <dependencies>
+        <dependency org="nasa.hq" name="hq_applicationProperties" rev="1.0.0-beta"/>
+        <dependency org="nasa.hq" name="hq_utils" rev="1.0.0"/>
+    </dependencies>
+</ivy-module>
