@@ -7,7 +7,7 @@
       <conf name="log4j12"  description="Give me the log4j12 only."/>
     </configurations>
     <dependencies>
-        <dependency org="nasa.hq" name="hq_applicationProperties" rev="1.0.0-beta"/>
+        <dependency org="nasa.hq" name="hq_applicationProperties" rev="1.0.0"/>
         <dependency org="nasa.hq" name="hq_utils" rev="1.0.0"/>
     </dependencies>
 </ivy-module>

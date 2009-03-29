@@ -1,4 +1,4 @@
-<!-- $Id: propsmain.jsp 333 2007-05-21 15:13:27Z sweiss $ -->
+<!-- $Id$ -->
 <%
     response.setHeader( "Cache-Control", "no-cache" );
     response.setHeader( "Pragma", "No-cache" );
@@ -8,7 +8,7 @@
 <%@ page buffer="500kb" autoFlush="false" %>
 <%@ page session="true" %>
 
-<!-- $Id: propsmain.jsp 333 2007-05-21 15:13:27Z sweiss $ -->
+<!-- $Id$ -->
 <html>
 <head>
 <title>Properties Administration</title>
