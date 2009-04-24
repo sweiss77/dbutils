@@ -19,6 +19,10 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="vendor" value="nasa_hq" />
         <property name="Name" value="NASA HQ Java SQL Utilities" />
         <property name="name" value="hq_sqlutils" />
+        <property name="version.major" value="1" />
+        <property name="version.minor" value="0" />
+        <property name="version.dot" value="0" />
+        <property name="last.change" value="Don't know." />
         <property name="project-description"
                           value="Database Utilities" />
         <property name="version"
@@ -77,6 +81,7 @@ For instructions on how to build the library, please view the README.txt file.
         <echo message="   compile  --> compiles the source code" />
         <echo message="   javadoc  --> generates the API documentation" />
         <echo message="   clean    --> cleans up the directory" />
+        <echo message="   Last version change --> ${last.change}" />
         <echo message="" />
         <echo message=" See the comments inside the build.xml file for more details." />
         <echo message="-------------------------------------------------------------" />
