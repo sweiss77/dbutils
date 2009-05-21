@@ -2,7 +2,7 @@
 
 ivy.base=ivy
 ivy.project=share/dbutils
-ivy.repository.base=/home/djg/ivy-repository
+ivy.repository.base=${user.home}/ivy-repository
 ivy.target=development
 ivy.lib=${ivy.repository.base}/${ivy.project}/${ivy.target}/lib
 ivy.dep.dir=../${ivy.target}
