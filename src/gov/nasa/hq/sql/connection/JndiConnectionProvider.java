@@ -37,7 +37,7 @@ public class JndiConnectionProvider implements ConnectionProvider {
      * @throws NoSuchPropertyException
      */
     public void setProperties( PropertyGroup properties )
-        throws NoSuchPropertyException {
+                    throws NoSuchPropertyException {
 
         // Get the name of the data source
         datasource_ = properties.getPropertyValue( "datasource" );
@@ -54,27 +54,21 @@ public class JndiConnectionProvider implements ConnectionProvider {
 
             DataSource ds = null;
 
-            // TODO - Need to add code to work with OC4J
-            // Get our environment naming context
+            // Get our environment naming context and lookup the data source
             Context init_ctx = new InitialContext();
-
-            if ( !datasource_.startsWith( "java:comp/env" ) ) {
-                Context env_ctx = (Context) init_ctx.lookup( "java:comp/env" );
-                ds = (DataSource) env_ctx.lookup( datasource_ );
-            } else {
-                // Look up our data source
-                ds = (DataSource) init_ctx.lookup( datasource_ );
-            }
+            ds = (DataSource) init_ctx.lookup( datasource_ );
 
             // Allocate and use a connection from the pool
             conn_ = ds.getConnection();
 
         } catch ( NamingException ex ) {
-            ex.printStackTrace();
-            throw new ConnectionProviderException( ex );
+            //ex.printStackTrace();
+            String s = "Error performing JNDI lookup: " + ex.getMessage();
+            throw new ConnectionProviderException( s, ex );
         } catch ( SQLException ex ) {
-            ex.printStackTrace();
-            throw new ConnectionProviderException( "Database error!", ex );
+            //ex.printStackTrace();
+            String s = "A database error occurred: " + ex.getMessage();
+            throw new ConnectionProviderException( s, ex );
         }
         return conn_;
     }
