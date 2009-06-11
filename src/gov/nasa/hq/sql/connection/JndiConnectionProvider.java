@@ -76,6 +76,23 @@ public class JndiConnectionProvider implements ConnectionProvider {
     /** Does nothing, let the connection pool handle closing connections */
     public void releaseConnection() {
 
+        try {
+            if ( conn_ != null ) {
+                conn_.close();
+                conn_ = null;
+            }
+        } catch ( Exception ex ) {
+            ex.printStackTrace();
+        }  finally {
+            if (conn_ != null) {
+                try { 
+                    conn_.close(); 
+                } catch (SQLException e) { 
+                    // do nothing
+                }
+                conn_ = null;
+            }
+        }
     }
 
 }
