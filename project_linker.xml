@@ -1,0 +1,9 @@
+<!-- $Id$ -->
+<project>
+  <property name="library.name" value="dbutils" />
+
+  <import file="../../ant/common.xml" />
+
+</project>
+
+<!-- End of file -->
