@@ -5,8 +5,10 @@ For instructions on how to build the library, please view the README.txt file.
 -->
 
 <project default="jar" basedir=".">
-  <property name="propertyFileName" value="build.properties" />
-  <property file="${propertyFileName}" />
+
+    <property name="propertyFileName" value="build.properties" />
+    <property file="${propertyFileName}" />
+    <property file="version.properties" />
 
     <!-- =================================================================== -->
     <!-- Initialization target                                               -->
@@ -19,26 +21,17 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="vendor" value="nasa_hq" />
         <property name="Name" value="NASA HQ Java SQL Utilities" />
         <property name="name" value="hq_sqlutils" />
-        <property name="version.major" value="1" />
-        <property name="version.minor" value="0" />
-        <property name="version.dot" value="0" />
         <property name="last.change" value="Don't know." />
-        <property name="project-description"
-                          value="Database Utilities" />
+        <property name="project-description" value="Database Utilities" />
         <property name="version"
                   value="${version.major}.${version.minor}.${version.dot}" />
         <property name="version.underscore"
                   value="${version.major}_${version.minor}_${version.dot}" />
         <property name="dist.dir" value="./dist/${name}-${version}" />
         <property name="year" value="2009" />
-        <property name="jarfile"
-                  value="${name}-${version.major}.${version.minor}.${version.dot}.jar" />
+        <property name="jarfile" value="${name}-${version.major}.${version.minor}.${version.dot}.jar" />
 
         <echo message="----------- ${Name} ${version} [${year}] ------------" />
-
-        <property name="debug" value="off" />
-        <property name="optimize" value="on" />
-        <property name="deprecation" value="on" />
 
         <property name="src.dir" value="./src" />
         <property name="lib.dir" value="./lib" />
@@ -48,7 +41,8 @@ For instructions on how to build the library, please view the README.txt file.
         <property name="build.src" value="./build/src" />
         <property name="build.dest" value="./build/classes" />
         <property name="javadoc.root" value="${build.dir}/javadoc" />
-        <property name="build.javadocs" value="${javadoc.root}/${name}/apidocs" />
+        <property name="build.javadocs"
+                  value="${javadoc.root}/${name}/apidocs" />
 
         <property name="dist.root" value="./dist" />
         <property name="dist.dir" value="${dist.root}/${name}-${version}" />
@@ -62,7 +56,8 @@ For instructions on how to build the library, please view the README.txt file.
         <filter token="verbose" value="true" />
 
         <property name="javadoc.publish.host" value="osiris.hitsshq.com" />
-        <property name="javadoc.publish.path" value="/usr/local/data/www/htdocs/share/docs/java/javadocs" />
+        <property name="javadoc.publish.path"
+                  value="/usr/local/data/www/htdocs/share/docs/java/javadocs" />
 
     </target>
 
@@ -130,26 +125,28 @@ For instructions on how to build the library, please view the README.txt file.
         </javac>
     </target>
 
-  <!-- =================================================================== -->
-  <!-- ivy sub-component                                                -->
-  <!-- =================================================================== -->
-  <propertyset id="ivy-properties">
-    <propertyref prefix="ivy"/>
-  </propertyset>
+    <!-- =================================================================== -->
+    <!-- ivy sub-component                                                -->
+    <!-- =================================================================== -->
+    <propertyset id="ivy-properties">
+        <propertyref prefix="ivy" />
+    </propertyset>
 
-  <target name="ivyclean" description="Call ivy/ivyclean to remove jar library directory." >
-    <subant target="ivyclean" inheritrefs="true">
-      <propertyset refid="ivy-properties" />
-      <filelist dir="${ivy.base}" files="build.xml" />
-    </subant>
-	</target>
+    <target name="ivyclean"
+            description="Call ivy/ivyclean to remove jar library directory.">
+        <subant target="ivyclean" inheritrefs="true">
+            <propertyset refid="ivy-properties" />
+            <filelist dir="${ivy.base}" files="build.xml" />
+        </subant>
+    </target>
 
-  <target name="ivyresolve" description="Call ivy/ivyresolve to build jar library.">
-    <subant target="ivyresolve" inheritrefs="true">
-      <propertyset refid="ivy-properties" />
-      <filelist dir="${ivy.base}" files="build.xml" />
-    </subant>
-  </target>
+    <target name="ivyresolve"
+            description="Call ivy/ivyresolve to build jar library.">
+        <subant target="ivyresolve" inheritrefs="true">
+            <propertyset refid="ivy-properties" />
+            <filelist dir="${ivy.base}" files="build.xml" />
+        </subant>
+    </target>
 
     <!-- =================================================================== -->
     <!-- Compiles the "About" code                                           -->
@@ -294,7 +291,7 @@ For instructions on how to build the library, please view the README.txt file.
         </subant>
     </target>
 
-    <target name="release" depends="clean,optimize,jar">
+    <target name="release" depends="clean,ivyclean,ivyresolve,optimize,jar">
         <subant target="release" inheritall="true" inheritrefs="true">
             <filelist dir="./release" files="build.xml" />
         </subant>
@@ -304,7 +301,8 @@ For instructions on how to build the library, please view the README.txt file.
         <input message="Username (${javadoc.publish.host}):"
                addproperty="username"
                defaultvalue="${remoteUser}" />
-        <input message="Password (CAUTION, THIS WILL BE ECHOED!):" addproperty="password" />
+        <input message="Password (CAUTION, THIS WILL BE ECHOED!):"
+               addproperty="password" />
         <scp todir="${username}:${password}@${javadoc.publish.host}:${javadoc.publish.path}">
             <fileset dir="${javadoc.root}" />
         </scp>

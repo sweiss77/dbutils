@@ -7,3 +7,8 @@ ivy.target=development
 ivy.lib=${ivy.repository.base}/${ivy.project}/${ivy.target}/lib
 ivy.dep.dir=../${ivy.target}
 ivy.dep.file=ivy.xml
+
+# Compiler options
+debug=off
+optimize=on
+deprecation=on
