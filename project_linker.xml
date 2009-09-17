@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 <project>
   <property name="library.name" value="dbutils" />
+  <property name="project.description" value="NASA HQ Java SQL Utilities" />
 
   <import file="../../ant/common.xml" />
 
