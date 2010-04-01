@@ -19,6 +19,7 @@ public class PropertiesConnectionStr extends DBConnectionStrategy{
 
     public Connection getConnection(String propertyFile) throws DBConnectionException {
 
+    	// FIXME - does nothing yet?
        /*
  		String driver = null;
         String url = null;
