@@ -23,7 +23,7 @@
         <property name="Vendor" value="NASA HQ" />
         <property name="vendor" value="nasa_hq" />
         <property name="Name" value="NASA HQ SQL Utilities" />
-        <property name="name" value="hq_utils" />
+        <property name="name" value="hq_sqlutils" />
         <property name="last.change" value="" />
         <property name="project-description"
                   value="SQL utility classes" />
