@@ -5,7 +5,7 @@ ivy.project=share/dbutils
 ivy.repository.base=${user.home}/ivy-repository
 ivy.target=development
 ivy.lib=${ivy.repository.base}/${ivy.project}/${ivy.target}/lib
-ivy.dep.dir=../${ivy.target}
+ivy.dep.dir=./${ivy.target}
 ivy.dep.file=ivy.xml
 
 # Compiler options
