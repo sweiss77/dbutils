@@ -1,5 +1,6 @@
 # $Id$
 
+# Ivy stuff
 ivy.base=ivy
 ivy.project=share/dbutils
 ivy.repository.base=${user.home}/ivy-repository
@@ -12,3 +13,4 @@ ivy.dep.file=ivy.xml
 debug=off
 optimize=on
 deprecation=on
+java.release=1.6
