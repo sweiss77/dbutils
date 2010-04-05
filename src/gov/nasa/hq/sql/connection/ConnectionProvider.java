@@ -2,9 +2,10 @@
 package gov.nasa.hq.sql.connection;
 
 import java.sql.Connection;
+import java.util.Properties;
 
-import gov.nasa.hq.properties.NoSuchPropertyException;
-import gov.nasa.hq.properties.PropertyGroup;
+//import gov.nasa.hq.properties.NoSuchPropertyException;
+//import gov.nasa.hq.properties.PropertyGroup;
 
 /**
  * Interface for concrete classes which get database connections
@@ -13,7 +14,7 @@ import gov.nasa.hq.properties.PropertyGroup;
 public interface ConnectionProvider {
 
     /**
-     * Gets a database connectoin
+     * Gets a database connection
      * @return java.sql.Connection
      * @throws {@link ConnectionProviderException}
      */
@@ -25,7 +26,7 @@ public interface ConnectionProvider {
      * @param properties
      * @throws {@link NoSuchPropertyException}
      */
-    public abstract void setProperties( PropertyGroup properties ) throws NoSuchPropertyException;
+    public abstract void setProperties( Properties properties ) throws ConnectionProviderException;
 
     /**
      * Releases the database connection

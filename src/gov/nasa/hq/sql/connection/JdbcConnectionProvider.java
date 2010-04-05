@@ -5,10 +5,7 @@ package gov.nasa.hq.sql.connection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import gov.nasa.hq.properties.ApplicationProperties;
-import gov.nasa.hq.properties.NoSuchPropertyException;
-import gov.nasa.hq.properties.PropertyGroup;
+import java.util.Properties;
 
 /**
  * This class provides a java.sql.Connection by calling
@@ -30,12 +27,12 @@ public class JdbcConnectionProvider implements ConnectionProvider {
      * @param properties
      * @throws {@link NoSuchPropertyException}
      */
-    public void setProperties( PropertyGroup properties ) throws NoSuchPropertyException {
+    public void setProperties( Properties properties ) throws ConnectionProviderException {
 
-        driver_ = properties.getPropertyValue( "driverName" );
-        url_ = properties.getPropertyValue( "url" );
-        username_ = properties.getPropertyValue( "username" );
-        password_ = properties.getPropertyValue( "password" );
+        driver_ = properties.getProperty( "connection.driverName" );
+        url_ = properties.getProperty( "connection.url" );
+        username_ = properties.getProperty( "connection.username" );
+        password_ = properties.getProperty( "connection.password" );
     }
 
     /**

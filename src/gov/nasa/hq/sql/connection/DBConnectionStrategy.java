@@ -8,6 +8,8 @@ import java.sql.Connection;
  * Add new concrete classes as necessary when invoking new connection getting methods and include 
  * them in the  getInstance() method. Implement the specific methods as needed.
  * @author baltner
+ * @deprecated This library no longer uses Application Properties, so there is no need
+ * for this class.
  *
  */
 public abstract class DBConnectionStrategy {
@@ -25,11 +27,8 @@ public abstract class DBConnectionStrategy {
 		  case 1: 
 			  dbConnStr =  new PropertiesConnectionStr();
 			  break;		  
-		  case 2:
-			  dbConnStr = new AppPropertiesConnectionStr();
-			  break;	  
 		  default: 
-			  throw new DBConnectionException("You need to specify a valid connection type.");
+			  throw new DBConnectionException("This class has been deprecated");
 	  }
 	  
 	  return dbConnStr;

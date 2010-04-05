@@ -4,13 +4,12 @@ package gov.nasa.hq.sql.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import gov.nasa.hq.properties.NoSuchPropertyException;
-import gov.nasa.hq.properties.PropertyGroup;
 
 /**
  * This class obtains a java.sql.Connection object from a DataSource
@@ -22,7 +21,6 @@ public class JndiConnectionProvider implements ConnectionProvider {
     String datasource_ = null;
 
     public JndiConnectionProvider() {
-
         // Empty constructor is needed by ConnectionProviderFactory
     }
 
@@ -36,11 +34,10 @@ public class JndiConnectionProvider implements ConnectionProvider {
      * @param properties
      * @throws NoSuchPropertyException
      */
-    public void setProperties( PropertyGroup properties )
-                    throws NoSuchPropertyException {
-
+    public void setProperties( Properties properties )
+                    throws ConnectionProviderException {
         // Get the name of the data source
-        datasource_ = properties.getPropertyValue( "datasource" );
+        datasource_ = properties.getProperty( "connection.datasource" );
     }
 
     /**
