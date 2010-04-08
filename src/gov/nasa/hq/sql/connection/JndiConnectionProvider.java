@@ -37,7 +37,7 @@ public class JndiConnectionProvider implements ConnectionProvider {
     public void setProperties( Properties properties )
                     throws ConnectionProviderException {
         // Get the name of the data source
-        datasource_ = properties.getProperty( "connection.datasource" );
+        datasource_ = properties.getProperty( "database.jndi.datasource" );
     }
 
     /**
