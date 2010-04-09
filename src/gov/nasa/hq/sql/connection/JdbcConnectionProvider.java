@@ -29,10 +29,10 @@ public class JdbcConnectionProvider implements ConnectionProvider {
      */
     public void setProperties( Properties properties ) throws ConnectionProviderException {
 
-        driver_ = properties.getProperty( "connection.driverName" );
-        url_ = properties.getProperty( "connection.url" );
-        username_ = properties.getProperty( "connection.username" );
-        password_ = properties.getProperty( "connection.password" );
+        driver_ = properties.getProperty( "database.jdbc.driverName" );
+        url_ = properties.getProperty( "database.jdbc.url" );
+        username_ = properties.getProperty( "database.jdbc.username" );
+        password_ = properties.getProperty( "database.jdbc.password" );
     }
 
     /**
