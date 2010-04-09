@@ -44,10 +44,6 @@ public class ConnectionProviderFactory {
 
         try {
 
-            // ApplicationProperties props =
-            // ApplicationProperties.getInstance();
-            // PropertySet dbprops = props.getPropertySet( "database" );
-            // PropertyGroup prov_props = dbprops.getPropertyGroup( name );
             String class_name = props.getProperty("database." + name + ".provider");
             if (class_name == null) {
                 String err = "Unable to get configuration info from properties!";
