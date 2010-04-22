@@ -5,6 +5,17 @@
 
   <import file="../../ant/common.xml" />
 
+<!-- This procedure is called after standard prepare. Add any extra preparation needed. -->
+  <target name="prepare-special" >
+  </target>
+
+<!-- This procedure is called after standard compile. Add any post-compile functionality. -->
+  <target name="compile-special" >
+  </target>
+
+<!-- This procedure is called after standard cleanup. Add any extra cleanup needed. -->
+  <target name="cleanup" >
+  </target>
 </project>
 
 <!-- End of file -->
