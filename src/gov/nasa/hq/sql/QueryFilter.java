@@ -152,7 +152,8 @@ public class QueryFilter implements java.io.Serializable {
             } else if( comp == SQL.REGEXP_WB ) {
             	value = dbstrategy.getRegexpWB(fieldname, val, caseSensitive);
             }else {
-                buf.append( "'" );
+                if ( !fieldname.contains("TO_DATE") )
+            		buf.append( "'" );
                 if ( comp == SQL.LIKE || comp == SQL.ENDS )
                     buf.append( '%' );
                 if ( !caseSensitive ) {
@@ -162,7 +163,8 @@ public class QueryFilter implements java.io.Serializable {
                 }
                 if ( comp == SQL.LIKE || comp == SQL.BEGINS )
                     buf.append( '%' );
-                buf.append( "'" );
+                if ( !fieldname.contains("TO_DATE") )
+            		buf.append( "'" );
                 value = new String( buf );
             }
 
