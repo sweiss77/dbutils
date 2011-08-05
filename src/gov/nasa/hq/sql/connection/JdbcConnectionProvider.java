@@ -9,8 +9,8 @@ import java.util.Properties;
 
 /**
  * This class provides a java.sql.Connection by calling
- * DriverManager.getConnection(url,username, password). It reads
- * the connection information from {@link ApplicationProperties}
+ * DriverManager.getConnection(url,username, password). It reads the connection
+ * information from {@link ApplicationProperties}
  */
 public class JdbcConnectionProvider implements ConnectionProvider {
 
@@ -24,32 +24,37 @@ public class JdbcConnectionProvider implements ConnectionProvider {
      * Sets the configuration information needed to obtain a database connection
      * The {@link PropertyGroup} argument should contain properties for
      * "driverName", "url", "username", and "password".
+     * 
      * @param properties
      * @throws {@link NoSuchPropertyException}
      */
-    public void setProperties( Properties properties ) throws ConnectionProviderException {
+    @Override
+    public void setProperties(Properties properties)
+        throws ConnectionProviderException {
 
-        driver_ = properties.getProperty( "database.jdbc.driverName" );
-        url_ = properties.getProperty( "database.jdbc.url" );
-        username_ = properties.getProperty( "database.jdbc.username" );
-        password_ = properties.getProperty( "database.jdbc.password" );
+        driver_ = properties.getProperty("database.jdbc.driverName");
+        url_ = properties.getProperty("database.jdbc.url");
+        username_ = properties.getProperty("database.jdbc.username");
+        password_ = properties.getProperty("database.jdbc.password");
     }
 
     /**
      * Creates a single database connection
+     * 
      * @return Connection
      * @throws ConnectionProviderException
      */
+    @Override
     public Connection getConnection() throws ConnectionProviderException {
 
         try {
-            Class.forName( driver_ );
-            conn_ = DriverManager.getConnection( url_, username_, password_ );
-        } catch ( ClassNotFoundException ex ) {
+            Class.forName(driver_);
+            conn_ = DriverManager.getConnection(url_, username_, password_);
+        } catch (ClassNotFoundException ex) {
             String err = "Unable to find database driver class";
-            throw new ConnectionProviderException( err, ex );
-        } catch ( SQLException ex ) {
-            throw new ConnectionProviderException( ex.getMessage(), ex );
+            throw new ConnectionProviderException(err, ex);
+        } catch (SQLException ex) {
+            throw new ConnectionProviderException(ex.getMessage(), ex);
         }
 
         return conn_;
@@ -57,14 +62,15 @@ public class JdbcConnectionProvider implements ConnectionProvider {
     }
 
     /** Closes the connection */
+    @Override
     public void releaseConnection() {
 
         try {
-            if ( conn_ != null ) {
+            if (conn_ != null) {
                 conn_.close();
                 conn_ = null;
             }
-        } catch ( Exception ex ) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 

@@ -12,8 +12,8 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * This class obtains a java.sql.Connection object from a DataSource
- * configured using JNDI
+ * This class obtains a java.sql.Connection object from a DataSource configured
+ * using JNDI
  */
 public class JndiConnectionProvider implements ConnectionProvider {
 
@@ -24,27 +24,31 @@ public class JndiConnectionProvider implements ConnectionProvider {
         // Empty constructor is needed by ConnectionProviderFactory
     }
 
-    public JndiConnectionProvider( String dataSource ) {
+    public JndiConnectionProvider(String dataSource) {
 
         datasource_ = dataSource;
     }
 
     /**
      * Sets the name of the data source
+     * 
      * @param properties
      * @throws NoSuchPropertyException
      */
-    public void setProperties( Properties properties )
-                    throws ConnectionProviderException {
+    @Override
+    public void setProperties(Properties properties)
+        throws ConnectionProviderException {
         // Get the name of the data source
-        datasource_ = properties.getProperty( "database.jndi.datasource" );
+        datasource_ = properties.getProperty("database.jndi.datasource");
     }
 
     /**
      * Gets a database connection
+     * 
      * @return java.sql.Connection
      * @throws ConnectionProviderException
      */
+    @Override
     public Connection getConnection() throws ConnectionProviderException {
 
         try {
@@ -53,38 +57,39 @@ public class JndiConnectionProvider implements ConnectionProvider {
 
             // Get our environment naming context and lookup the data source
             Context init_ctx = new InitialContext();
-            ds = (DataSource) init_ctx.lookup( datasource_ );
+            ds = (DataSource) init_ctx.lookup(datasource_);
 
             // Allocate and use a connection from the pool
             conn_ = ds.getConnection();
 
-        } catch ( NamingException ex ) {
-            //ex.printStackTrace();
+        } catch (NamingException ex) {
+            // ex.printStackTrace();
             String s = "Error performing JNDI lookup: " + ex.getMessage();
-            throw new ConnectionProviderException( s, ex );
-        } catch ( SQLException ex ) {
-            //ex.printStackTrace();
+            throw new ConnectionProviderException(s, ex);
+        } catch (SQLException ex) {
+            // ex.printStackTrace();
             String s = "A database error occurred: " + ex.getMessage();
-            throw new ConnectionProviderException( s, ex );
+            throw new ConnectionProviderException(s, ex);
         }
         return conn_;
     }
 
     /** Does nothing, let the connection pool handle closing connections */
+    @Override
     public void releaseConnection() {
 
         try {
-            if ( conn_ != null ) {
+            if (conn_ != null) {
                 conn_.close();
                 conn_ = null;
             }
-        } catch ( Exception ex ) {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }  finally {
+        } finally {
             if (conn_ != null) {
-                try { 
-                    conn_.close(); 
-                } catch (SQLException e) { 
+                try {
+                    conn_.close();
+                } catch (SQLException e) {
                     // do nothing
                 }
                 conn_ = null;

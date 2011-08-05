@@ -1,4 +1,3 @@
-
 // $Id$
 
 package gov.nasa.hq.sql;
@@ -9,28 +8,29 @@ package gov.nasa.hq.sql;
 public class OrderByClause extends SQL {
 
     public OrderByClause() {
-        super( "ORDER BY" );
+        super("ORDER BY");
     }
 
-    public OrderByClause( String s ) {
+    public OrderByClause(String s) {
         this();
-        append( s );
+        append(s);
     }
 
-    public OrderByClause( String[] s ) {
+    public OrderByClause(String[] s) {
 
         this();
 
         int i = 0;
 
-        for ( i = 0; i < s.length - 1; i++ ) {
-            append( s[i] );
-            append( ", " );
+        for (i = 0; i < s.length - 1; i++) {
+            append(s[i]);
+            append(", ");
         }
 
-        append( s[i] );
+        append(s[i]);
     }
 
+    @Override
     public String getContent() {
         return toString();
     }

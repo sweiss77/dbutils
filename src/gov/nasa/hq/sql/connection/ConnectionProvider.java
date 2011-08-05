@@ -15,6 +15,7 @@ public interface ConnectionProvider {
 
     /**
      * Gets a database connection
+     * 
      * @return java.sql.Connection
      * @throws {@link ConnectionProviderException}
      */
@@ -23,10 +24,12 @@ public interface ConnectionProvider {
     /**
      * Stores the information that a child class needs to get a database
      * connection
+     * 
      * @param properties
      * @throws {@link NoSuchPropertyException}
      */
-    public abstract void setProperties( Properties properties ) throws ConnectionProviderException;
+    public abstract void setProperties(Properties properties)
+        throws ConnectionProviderException;
 
     /**
      * Releases the database connection
